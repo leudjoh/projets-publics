@@ -41,7 +41,7 @@ $confirm = Read-Host "Voulez-vous continuer ? (o/n)"
     }
 New-vm -name "$NomVM" -path "$folder" -memorystartupbytes $memory -Generation 1 -switch $comutateur
 mkdir "$folder\$NomVM\VHD"
-copy-item -path "E:\sysprep\WS2022-sysprep-CORE.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
+copy-item -path "J:\cours La piscine & HtB\Script\Script powershell\scripts finis\sysprep\WS2022-sysprep-CORE.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
 add-vmharddiskdrive -vmname "$NomVM" -path "$folder\$NomVM\VHD\$NomVM.vhdx"
 set-vm -name "$NomVM" -processorcount 2
 set-vm -name "$NomVM" -checkpointtype disabled | Start-Sleep -Seconds 1
@@ -93,7 +93,7 @@ $confirm = Read-Host "Voulez-vous continuer ? (o/n)"
     }
 New-vm -name "$NomVM" -path "$folder" -memorystartupbytes $memory -Generation 2 -switch $comutateur
 mkdir "$folder\$NomVM\VHD"
-copy-item -path "E:\sysprep\WIN2022sysprepGUI.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
+copy-item -path "J:\cours La piscine & HtB\Script\Script powershell\scripts finis\sysprep\WIN2022sysprepGUI.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
 add-vmharddiskdrive -vmname "$NomVM" -path "$folder\$NomVM\VHD\$NomVM.vhdx"
 set-vm -name "$NomVM" -processorcount 2
 set-vm -name "$NomVM" -checkpointtype disabled | Start-Sleep -Seconds 1
@@ -145,7 +145,7 @@ $confirm = Read-Host "Voulez-vous continuer ? (o/n)"
     }
 New-vm -name "$NomVM" -path "$folder" -memorystartupbytes $memory -Generation 2 -switch $comutateur
 mkdir "$folder\$NomVM\VHD"
-copy-item -path "E:\sysprep\W11-PRO.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
+copy-item -path "J:\cours La piscine & HtB\Script\Script powershell\scripts finis\sysprep\W11-PRO.vhdx" -destination "$folder\$NomVM\VHD\$NomVM.vhdx"
 add-vmharddiskdrive -vmname "$NomVM" -path "$folder\$NomVM\VHD\$NomVM.vhdx"
 set-vm -name "$NomVM" -processorcount 2
 set-vm -name "$NomVM" -checkpointtype disabled | Start-Sleep -Seconds 1
@@ -248,6 +248,8 @@ do {
 $vmname2 = $vms[$index].Name
 Write-Host "Vous avez choisi : $vmname2" -ForegroundColor Cyan
 
+#Get-vm | select-object name , state | ft
+#$vmname2 = read-host "Saisir le nom de la VM"
 $cheminVMsup =  Split-Path -Path (Get-VMHardDiskDrive -VMName "$vmname2")[0].Path
 New-VHD -Path $cheminVMsup"\bdd.vhdx" -sizebytes 4196MB
 New-VHD -Path $cheminVMsup"\log.vhdx" -sizebytes 4196MB
@@ -463,11 +465,7 @@ if (-not (Test-Path $vhdPath)) {
 } else {
     Write-Host "Le disque $vhdPath existe déjà." -ForegroundColor Yellow
 }
-
-# Attache le disque à la VM
-Write-Host "Ajout du disque à la VM $vmname2..."
-Add-VMHardDiskDrive -VMName $vmname2 -ControllerType SCSI -ControllerNumber 0 -Path $vhdPath
-} 
+}
 
 function DossPartage()
 {
@@ -490,7 +488,14 @@ $scriptPath = $MyInvocation.MyCommand.Path
 function invok()
 {
     # Récupère toutes les VM et les stocke dans une variable
-    $vms = Get-VM
+    $vms = Get-VM -ErrorAction Stop
+
+    # Filtrer si la machine cible a au moins une VM
+        if ($vms.Count -eq 0) {
+        Write-Host "❌ Aucune machine virtuelle trouvée." -ForegroundColor Red
+        pause 
+        return
+    }
 
     # Affiche les VM avec un index
     for ($i = 0; $i -lt $vms.Count; $i++) {
@@ -515,9 +520,21 @@ function invok()
     Write-Host "Vous avez choisi : $vmname3" -ForegroundColor Cyan
 
     # Lancement du script distant
+    Invoke-Command -VMName $vmname3 -FilePath $scriptPath 
+
+    # Demande pour continuer
+    do {
+        $choice = Read-Host "`nSouhaitez-vous exécuter une autre action sur cette VM (O/N)"
+    } while ($choice -notmatch '^[OoNn]$')
+
+    if ($choice -match '^[Oo]$') {
     Invoke-Command -VMName $vmname3 -FilePath $scriptPath
+    } else {
+       & $scriptPath 
+    }
 }
 
+# Invoke-Command -VMName $vmname3 -FilePath $scriptPath
 function menu()
 {
     Get-PSSession | Remove-PSSession
@@ -533,14 +550,15 @@ function menu()
 |      /\ Après création vérifier la VM dans hyper-v et configurer le mot de passe /\    |
 |                                                                                        |
 |    4) Ajouter 3 disques dur à un DC  (AD corporate)                                    |
-|    4b) Ajouter un disque de 10 Go à une VM (dossier partagés)                                      |
-|                                                                                        |   
+|    4b) Ajouter un disque de 10 Go à une VM (dossier partagés)                          |
+|                                                                                        | 
 |  5) Invoquer le menu sur une VM au choix (à répéter pour chaques choix suivants)       |
+|         (Ne pas oublier le nom de domaine si besoin)                                   |
 |    6) Changer l'IP et nom de poste                                                     |
-|         controleur principal                                                           |
+|         controleur principal (faire les étapes 7 et 8 à la suite)                      |
 |             7) Installation active directory corporate                                 |
-|             8) Gestion DNS et zone inversee                                            |
-|         controleur secondaire                                                          |
+|             8) Gestion DNS et zone de recherche inversee                               |
+|         controleur secondaire (faire les étapes 9 à 11 la suite)                       |
 |             9) AD2 changer ip du DNS et jointure domaine                               |
 |            10) Installation AD secondaire (AD corporate)                               |
 |            11) Configurer DNS sur AD secondaire                                        |

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>À propos / Contact</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="nav">
+    <h1 class="logo">Djodjo's Gallery</h1>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="about.html" class="active">À propos / Contact</a>
+    </nav>
+</header>
+
+<section class="about">
+    <h2>À propos de moi</h2>
+    <p>
+        Je suis un artiste passionné par le street-art, la couleur et l’expression visuelle.
+        Mon travail mélange techniques modernes et influences urbaines.
+    </p>
+
+    <h2>Contact</h2>
+    <form id="contact-form">
+        <label>Nom</label>
+        <input type="text" name="nom" required />
+
+        <label>Email</label>
+        <input type="email" name="email" required />
+
+        <label>Votre message</label>
+        <textarea name="message" rows="5" required></textarea>
+
+        <button type="submit">Envoyer</button>
+    </form>
+
+
+    <p id="form-status" class="status"></p>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

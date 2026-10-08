@@ -59,9 +59,11 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 
 **Travailler avec une IA, sans lui donner les clés.** Claude n'accède qu'au dépôt du site, sur autorisation, et ne fusionne rien. Ses propositions passent par la même relecture que n'importe quelle contribution. Ses erreurs figurent dans le tableau des incidents : c'est la relecture qui les a rattrapées.
 
-**L'IA n'est pas illimitée.** Claude s'utilise dans une limite d'usage hebdomadaire : en six jours, j'ai consommé la totalité de la mienne (99 % le 7 octobre). D'où trois habitudes pour l'économiser : une conversation par sujet, un résumé de l'état du site pour reprendre dans une nouvelle conversation sans tout relire, et des captures recadrées plutôt que des pages entières.
+**L'IA n'est pas illimitée.** Claude s'utilise avec une limite d'usage hebdomadaire. J'ai épuisé la mienne en six jours : le 7 octobre après-midi, la jauge était à 100 %, et je n'ai plus eu accès à Claude avant sa remise à zéro, le lendemain à 13 h. C'était une erreur de ma part. J'ai mené en parallèle deux très longues conversations en réflexion étendue, un mode où Claude réfléchit plus longtemps avant de répondre, et consomme donc beaucoup plus. Je l'avais activé dans la première, et la seconde l'a gardé par défaut sans que je m'en aperçoive. Le contenu y a gagné en qualité, mais la limite a fondu. Depuis, je vérifie ce réglage à l'ouverture de chaque conversation. J'ai aussi gardé trois habitudes : une conversation par sujet, un résumé de l'état du site pour reprendre ailleurs sans tout relire, et des captures recadrées.
 
-![Ma limite d'usage hebdomadaire de Claude, consommée à 99 % en six jours](images/usage-claude-semaine.png)
+![Ma limite d'usage hebdomadaire de Claude : 100 %, épuisée en six jours](images/usage-claude-semaine.png)
+
+**Ce que l'IA change pour moi.** J'ai découvert l'IA avec Claude, et c'est un compagnon de travail remarquable. En une semaine, j'ai fait ce qui m'aurait pris, selon mon estimation, deux mois à plein temps. Mais produire avec une IA est un travail en soi : il faut formuler, relire et vérifier. L'IA a aussi un revers : je codais moins moi-même, et j'avais l'impression de pouvoir m'en tirer avec quelques notions. Vu la vitesse à laquelle Claude écrit et teste du code, apprendre à coder m'a même paru inaccessible, et presque obsolète. C'est un piège quand on vise la cybersécurité, où il faut comprendre ce qu'on défend : le but n'est pas d'écrire aussi vite qu'une IA, mais de savoir lire et juger ce qu'elle écrit. J'ai donc gardé des exercices à faire seul, avec un simple indice : l'en-tête HSTS, puis l'adresse IP réelle des visiteurs du formulaire.
 
 ## Quatre temps
 
@@ -135,19 +137,19 @@ Le même jour, 25 toiles ont rejoint la galerie (PR #43 et #46).
 
 **Ce que le site disait de lui-même** (PR #52 et #53). Tout le monde peut lire les fichiers publics, et `robots.txt` est souvent le premier qu'on ouvre pour reconnaître un site (OWASP WSTG-INFO-03). Son commentaire citait les dossiers internes, alors qu'il disait justement ne pas les citer (erreur de Claude, dans la PR #50). Les commentaires du HTML et du CSS nommaient le fichier de règles du projet, le workflow et la protection du formulaire. Ce n'étaient pas des failles, puisque ces dossiers répondent `403`, mais des informations gratuites. Tout est retiré, et `CLAUDE.md` pose la règle : les commentaires publics expliquent la mise en page, jamais l'intérieur du site.
 
-**Troisième revue de code** (PR #56 et #58). Tout le code a été relu, sauf le code tiers. Sur les sept points relevés, trois sont corrigés.
+**Troisième revue de code** (PR #56 et #58). Tout le code a été relu, sauf le code tiers. Voici ce qui a été corrigé.
 
-- **`.htaccess` en défaillance ouverte** (PR #56). Les protections étaient rangées dans des blocs `<IfModule>` : si un module manque, Apache ignore ces règles sans rien dire. Démonstration sur un Apache local, sans le module de réécriture : `.git/config`, `CLAUDE.md` et le workflow répondaient `200`, et le contrôle de syntaxe répondait « Syntax OK ». Hors de ces blocs, un module manquant donne une erreur 500 visible, et rien ne fuit. Vérifié en ligne le 6 octobre : les pages répondent normalement, et les fichiers internes `403`.
+- **`.htaccess` en défaillance ouverte** (PR #56). Les protections étaient rangées dans des blocs `<IfModule>` : si un module manque, Apache ignore ces règles sans rien dire. Démonstration sur un Apache local, sans le module de réécriture : des fichiers internes répondaient `200`, et le contrôle de syntaxe répondait « Syntax OK ». Hors de ces blocs, un module manquant donne une erreur 500 visible, et rien ne fuit. Vérifié en ligne le 6 octobre : les pages répondent normalement, et les fichiers internes `403`.
 - **Le jeton d'écriture n'est plus sur la machine qui ouvre les photos** (PR #58). Le workflow tourne désormais en deux jobs, sur deux machines. Le premier traite les photos avec un jeton en lecture seule. Le second ne lance ni Python ni la bibliothèque d'images : il contrôle le résultat du premier (fichiers autorisés seulement, aucun lien symbolique ni fichier exécutable), puis ouvre la pull request. Au passage, les liens symboliques sont refusés : un lien vers une image déjà en ligne était accepté comme une nouvelle toile.
-- **PHPMailer suivi** (PR #58). C'est le seul code tiers exécuté par le site, et rien ne le surveillait. `composer.lock` décrit maintenant exactement la version installée.
+- **Le code tiers suivi** (PR #58). Le formulaire de contact s'appuie sur une bibliothèque d'envoi de mails, et rien ne surveillait sa version. Un fichier de verrouillage décrit maintenant exactement la version installée.
 
-Les quatre autres points seront décrits ici une fois corrigés : on ne publie pas une faiblesse encore ouverte.
+Ce document ne décrit que des points corrigés : on ne publie pas une faiblesse encore ouverte.
 
 ![Le workflow d'ajout en deux jobs](images/workflow-securise.png)
 
 Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), puis en conditions réelles : les quatre dépôts de photos suivants (PR #60 à #63) sont passés par les deux jobs sans erreur. La galerie compte maintenant 62 œuvres, dont plusieurs graffitis sur mur.
 
-**403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une erreur 404, pour ne pas confirmer qu'ils existent ? La réponse reste 403 : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur `/.git/` dans les journaux du serveur est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
+**403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une erreur 404, pour ne pas confirmer qu'ils existent ? La réponse reste 403 : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur un dossier interne, dans les journaux du serveur, est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
 
 ## Incidents et leçons
 
@@ -155,7 +157,7 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 |---|---|---|
 | Une image remplacée revient dans son ancienne version (28 septembre, puis 5 octobre) | Même nom de fichier ; le cache de l'hébergeur garde l'image une semaine | La leçon du premier jour avait été oubliée. Le workflow l'applique maintenant (PR #48) |
 | Doublons et image cassée dans la galerie | J'ai écarté la correction prête dans la PR #18 pour réparer à la main, directement sur la branche principale | Une correction relue et testée vaut mieux qu'une réparation à la main. Le fichier, sa miniature et sa ligne vont ensemble |
-| Des prénoms publiés dans un texte de l'accueil | PR fusionnée sans relecture | Retirés à la PR suivante, six minutes plus tard, mais ils restent dans l'historique. Relire avant de fusionner ; ne publier que le nécessaire |
+| Des prénoms publiés dans un texte de l'accueil | PR fusionnée sans relecture | Retirés à la PR suivante, six minutes plus tard, mais une publication ne s'efface jamais complètement. Relire avant de fusionner ; ne publier que le nécessaire |
 | Deux toiles représentant des personnes réelles, titrées par leur prénom ou surnom | Publiées avant d'avoir l'accord des personnes | L'une retirée, l'autre renommée. Utiliser le portrait de quelqu'un demande son accord ; publier est irréversible |
 | Une PR décrivait un comportement faux (erreur de Claude) | Description non vérifiée | Corrigé par la PR #16 : relire aussi ce que l'IA affirme |
 | Deux correctifs sur téléphone sans effet (erreur de Claude) | Corrections sur hypothèse, sans mesure sur l'appareil | Problème encore ouvert : mesurer avant de corriger |
@@ -174,7 +176,7 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 |---|---|
 | Moindre privilège | Hébergeur relié à un seul dépôt ; workflow en deux jobs : la machine qui ouvre les photos n'a jamais le jeton d'écriture, permissions vides par défaut |
 | Zéro confiance | Le second job contrôle le travail du premier avant de publier : fichiers autorisés seulement, ni lien symbolique ni exécutable |
-| Sécurité de la chaîne d'approvisionnement | Actions figées par empreinte, modules vérifiés par empreinte, mises à jour relues avant fusion ; PHPMailer suivi par `composer.lock` |
+| Sécurité de la chaîne d'approvisionnement | Actions figées par empreinte, modules vérifiés par empreinte, mises à jour relues avant fusion ; bibliothèque d'envoi de mails suivie par un fichier de verrouillage |
 | Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 63 PR en neuf jours |
 | Validation des entrées, tout ou rien | Le workflow refuse tout dépôt douteux sans rien modifier, liens symboliques compris |
 | Limiter les fuites d'information | `robots.txt` et commentaires publics sans détails internes ; version de PHP masquée |
@@ -193,7 +195,6 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 - **Toiles noires sur Android** jusqu'au premier défilement : mesurer sur l'appareil (débogage USB, onglet Réseau) avant tout nouveau correctif.
 - **Poids des pages** : sur un écran haute définition, la miniature de 640 px est trop petite et la galerie charge les images complètes, près de 28 Mo pour 62 œuvres. Il faut une taille intermédiaire. L'accueil, lui, charge toutes les miniatures pour son mur (5,6 Mo) : il faut en limiter le nombre.
 - **Les dernières toiles** : leur écrire une description (texte alternatif) et un vrai titre, là où il ressemble encore à un nom de fichier.
-- **Les points restants de la revue de code**, puis leur description ici.
 - **HSTS** : un mois, puis un an, après vérification à chaque palier.
 - **Le reste** : pied de page sur toutes les pages, ménage des branches obsolètes, et une page « Sous le capot » qui expliquera les principes de sécurité du site, jamais ses réglages, avec un fichier `security.txt`.
 
@@ -213,11 +214,11 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #5 | 30/09 | Ajoute un CLAUDE.md | fusionnée |
 | #6 | 02/10 | Corrige la galerie sur mobile et sous le menu | fusionnée |
 | #7 | 02/10 | Remplace les photos par des versions optimisées | fusionnée |
-| #8 | 02/10 | Supprime la page par défaut d'Hostinger | fusionnée |
-| #9 | 02/10 | Sécurise le dossier vendor et le formulaire de contact | fusionnée |
+| #8 | 02/10 | Supprime la page par défaut de l'hébergeur | fusionnée |
+| #9 | 02/10 | Sécurise le dossier du code tiers et le formulaire de contact | fusionnée |
 | #10 | 02/10 | Nettoie la feuille de style et le script | fusionnée |
 | #11 | 02/10 | Fait du logo un lien vers l'accueil | fusionnée |
-| #12 | 02/10 | Ajoute un workflow qui publie les peintures déposées dans img-add | fusionnée |
+| #12 | 02/10 | Ajoute un workflow qui publie les peintures déposées dans un dossier de dépôt | fusionnée |
 | #13 | 02/10 | Ajoute la peinture « Grafity » | fusionnée |
 | #14 | 02/10 | Affiche le titre des peintures au survol et dans la lightbox | fusionnée |
 | #15 | 03/10 | Ajoute 4 peintures | fusionnée |
@@ -252,7 +253,7 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #44 | — | Ajoute 6 peintures | fermée sans fusion |
 | #45 | — | Workflow: Bump the actions group with 2 updates (Dependabot) | fermée sans fusion |
 | #46 | 05/10 | Ajoute 19 peintures et remplace la photo de Taï Ji | fusionnée |
-| #47 | 05/10 | Remplace la photo de Forum et vide img-add des photos déjà en ligne | fusionnée |
+| #47 | 05/10 | Remplace la photo de Forum et vide le dossier de dépôt des photos déjà en ligne | fusionnée |
 | #48 | 05/10 | Ajoute le remplacement automatique d'une peinture | fusionnée |
 | #49 | 05/10 | Workflow: Bump the actions group with 2 updates (Dependabot) | fusionnée |
 | #50 | 05/10 | Ajoute l'aperçu de partage et les bases du référencement | fusionnée |
@@ -263,9 +264,9 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #55 | 06/10 | Remplace « peintre autodidacte » par « street art » dans les descriptions | fusionnée |
 | #56 | 06/10 | Sort les règles du .htaccess des blocs IfModule (défaillance sûre) | fusionnée |
 | #57 | — | Ajoute la peinture « Essai deux jobs » et remplace la photo de « Taï Ji » | fermée sans fusion |
-| #58 | 06/10 | Workflow en deux jobs, liens symboliques refusés, suivi de PHPMailer | fusionnée |
+| #58 | 06/10 | Workflow en deux jobs, liens symboliques refusés, suivi du code tiers | fusionnée |
 | #59 | 06/10 | Garde « figuration libre » dans les textes (règle dans CLAUDE.md) | fusionnée |
-| #60 | 06/10 | Ajoute la peinture « Kime-1 » | fusionnée |
+| #60 | 06/10 | Ajoute 1 peinture | fusionnée |
 | #61 | 06/10 | Ajoute 3 peintures | fusionnée |
 | #62 | 06/10 | Ajoute la peinture « fresque-1 » | fusionnée |
 | #63 | 06/10 | Ajoute la peinture « fresque-2 » | fusionnée |

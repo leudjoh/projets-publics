@@ -1,6 +1,6 @@
 # Djodjo's Gallery — Retour d'expérience
 
-**Refondre et sécuriser un site vitrine en neuf jours, avec une IA**
+**Refondre et sécuriser un site vitrine en onze jours, avec une IA**
 
 Geoffroy, alias Djodjo · en reconversion vers la cybersécurité (blue team) · octobre 2026
 
@@ -12,11 +12,11 @@ Site : [djos-galley.online](https://djos-galley.online) · Version PDF : [Djod
 
 Djodjo's Gallery est le site vitrine de mes peintures : street art, lettrages graffiti, personnages, machines. Il ne vend rien. Il me sert aussi de terrain d'entraînement pour ma reconversion vers la cybersécurité.
 
-Du 28 septembre au 6 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **63 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Quinze viennent du workflow d'ajout de toiles, deux de Dependabot ; les 46 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
+Du 28 septembre au 8 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **68 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-sept viennent du workflow d'ajout de toiles, deux de Dependabot ; les 49 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
 
 | Indicateur | Avant | Après |
 |---|---|---|
-| Œuvres en ligne | 10, sans classement | 62, en six séries |
+| Œuvres en ligne | 10, sans classement | 66, en six séries |
 | Ajouter une toile | modifier le HTML à la main | déposer une photo, relire une pull request |
 | Poids des images de départ (11 fichiers) | 18,9 Mo | 4,4 Mo (−77 %) |
 | Galerie sur téléphone (33 toiles) | 13,1 Mo | 2,4 Mo (−82 %) |
@@ -27,7 +27,7 @@ Du 28 septembre au 6 octobre 2026, le site est passé de fichiers déposés à
 | Erreurs dans la galerie (3 octobre) | 3 doublons, 1 image cassée | 0 |
 | Titre principal (`h1`) | le logo, sur les trois pages | un par page, propre à chaque page |
 
-**Ce que le projet m'a fait pratiquer :** Git et GitHub (branches, pull requests, relecture), GitHub Actions, sécurité web (CSP, HSTS, en-têtes HTTP), sécurité de la chaîne d'approvisionnement, fuites d'information (OWASP WSTG), RGPD, accessibilité (axe, navigation au clavier), référencement (Search Console, redirections), lecture des en-têtes avec `curl`, règles Apache (`.htaccess`), travail encadré avec une IA.
+**Ce que le projet m'a fait pratiquer :** Git et GitHub (branches, pull requests, relecture), GitHub Actions, sécurité web (CSP, HSTS, en-têtes HTTP), sécurité de la chaîne d'approvisionnement, fuites d'information (OWASP WSTG), RGPD et pseudonymisation (HMAC), accessibilité (axe, navigation au clavier), référencement (Search Console, redirections), lecture des en-têtes avec `curl`, règles Apache (`.htaccess`), travail encadré avec une IA.
 
 > Le code du site est dans un dépôt privé. Les numéros de pull request (PR) servent de repères ; l'annexe les liste toutes.
 
@@ -44,7 +44,8 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 | La relecture et la fusion de chaque pull request | La rédaction des pull requests et de `CLAUDE.md` |
 | Les vérifications sur le site en ligne (`curl`, console du navigateur) et Search Console, propriété vérifiée par DNS | Le diagnostic de ce que Google montrait, à partir de ces vérifications |
 | Les photos et les titres des toiles, les décisions de consentement, le choix des descriptions Google et de l'image de partage | L'explication de chaque choix et de chaque erreur, les miennes comme les siennes |
-| La série Persos, créée seul sans aide au code ; l'en-tête HSTS, trouvé moi-même en exercice guidé | |
+| La série Persos, créée seul sans aide au code ; l'en-tête HSTS, trouvé moi-même en exercice guidé | La correction du formulaire de contact (PR #64), testée sur un serveur PHP local |
+| La mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | |
 
 ## La méthode
 
@@ -65,9 +66,9 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 
 **Ce que l'IA change pour moi.** J'ai découvert l'IA avec Claude, et c'est un compagnon de travail remarquable. En une semaine, j'ai fait ce qui m'aurait pris, selon mon estimation, deux mois à plein temps. Mais produire avec une IA est un travail en soi : il faut formuler, relire et vérifier. L'IA a aussi un revers : je codais moins moi-même, et j'avais l'impression de pouvoir m'en tirer avec quelques notions. Vu la vitesse à laquelle Claude écrit et teste du code, apprendre à coder m'a même paru inaccessible, et presque obsolète. C'est un piège quand on vise la cybersécurité, où il faut comprendre ce qu'on défend : le but n'est pas d'écrire aussi vite qu'une IA, mais de savoir lire et juger ce qu'elle écrit. J'ai donc gardé des exercices à faire seul, avec un simple indice : l'en-tête HSTS, puis l'adresse IP réelle des visiteurs du formulaire.
 
-## Quatre temps
+## Cinq temps
 
-![Chronologie : fondations, refonte, durcissement, visibilité et revue](images/chronologie.png)
+![Chronologie : fondations, refonte, durcissement, visibilité et revue, formulaire et finitions](images/chronologie.png)
 
 ### 1. Fondations (28 septembre – 2 octobre, PR #1 à #14)
 
@@ -143,13 +144,25 @@ Le même jour, 25 toiles ont rejoint la galerie (PR #43 et #46).
 - **Le jeton d'écriture n'est plus sur la machine qui ouvre les photos** (PR #58). Le workflow tourne désormais en deux jobs, sur deux machines. Le premier traite les photos avec un jeton en lecture seule. Le second ne lance ni Python ni la bibliothèque d'images : il contrôle le résultat du premier (fichiers autorisés seulement, aucun lien symbolique ni fichier exécutable), puis ouvre la pull request. Au passage, les liens symboliques sont refusés : un lien vers une image déjà en ligne était accepté comme une nouvelle toile.
 - **Le code tiers suivi** (PR #58). Le formulaire de contact s'appuie sur une bibliothèque d'envoi de mails, et rien ne surveillait sa version. Un fichier de verrouillage décrit maintenant exactement la version installée.
 
-Ce document ne décrit que des points corrigés : on ne publie pas une faiblesse encore ouverte.
+Les autres points concernaient le formulaire de contact : ils sont traités par la PR #64, au cinquième temps. Ce document ne décrit que des points corrigés : on ne publie pas une faiblesse encore ouverte.
 
 ![Le workflow d'ajout en deux jobs](images/workflow-securise.png)
 
 Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), puis en conditions réelles : les quatre dépôts de photos suivants (PR #60 à #63) sont passés par les deux jobs sans erreur. La galerie compte maintenant 62 œuvres, dont plusieurs graffitis sur mur.
 
 **403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une erreur 404, pour ne pas confirmer qu'ils existent ? La réponse reste 403 : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur un dossier interne, dans les journaux du serveur, est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
+
+### 5. Formulaire et finitions (7 – 8 octobre, PR #64 à #68)
+
+**Le formulaire de contact, en exercice guidé** (PR #64). La revue de code soupçonnait la limite d'envois de compter la mauvaise adresse, à cause du CDN de l'hébergeur. Claude m'a donné un indice plutôt que la réponse, et j'ai mesuré : une ligne de journal temporaire, un envoi depuis le PC puis depuis le téléphone en 4G, et une comparaison avec `ifconfig.me`. Verdict : l'hypothèse était fausse. Mais la mesure a révélé un autre point, corrigé dans la même PR.
+
+J'ai aussi travaillé sur la façon dont le formulaire garde la trace des adresses des visiteurs. Une empreinte sans clé n'est pas anonyme : avec 4,3 milliards d'adresses IPv4 possibles, on retrouve l'adresse d'origine en quelques minutes. C'est une pseudonymisation, pas une anonymisation. Mon premier essai ajoutait un sel aléatoire à chaque envoi, ce qui empêchait de reconnaître deux envois du même visiteur. Un sel protège des mots de passe ; ici, il fallait une clé fixe et secrète (HMAC). Après deux autres essais, j'ai demandé à Claude d'écrire la correction, que j'ai relue. Le formulaire garde désormais des empreintes à clé secrète, générée sur mon poste sans jamais s'afficher à l'écran, et les efface rapidement. Il refuse les envois venus d'un autre site, et s'arrête proprement si sa configuration est incomplète, au lieu de fonctionner sans protection.
+
+Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine était refusé et qu'un vrai message passait. J'ai aussi vidé le journal PHP des lignes qui contenaient mes adresses IP en clair : le test avait laissé des données personnelles derrière lui.
+
+**Les dernières toiles** (PR #65 à #67). Quatre toiles de plus : la galerie en compte 66. Les dix plus récentes avaient pour description leur seul titre, faute de mieux : un lecteur d'écran lisait « fresque-1 ». Claude a écrit les dix descriptions après avoir regardé les toiles, et j'ai choisi cinq nouveaux titres à la place de ceux qui ressemblaient à des noms de fichiers.
+
+**Le pied de page partout** (PR #68). La mention « conçu, codé et sécurisé par Djodjo et Claude (IA) » figure maintenant sur toutes les pages, pas seulement sur l'accueil.
 
 ## Incidents et leçons
 
@@ -169,6 +182,9 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 | `robots.txt` citait les dossiers internes (erreur de Claude) | Un commentaire écrit pour expliquer, dans un fichier public | Corrigé par la PR #52 : un fichier public ne décrit jamais l'intérieur du site |
 | Google montrait encore l'ancien site | `www` et l'adresse principale servaient la même page en `200` depuis le début | Une adresse, une page : la redirection `301` ordonne, la balise `canonical` suggère (PR #54) |
 | Trois constats faux dans la revue de code (erreur de Claude) | Une commande qui n'affichait qu'une partie d'un fichier, des caractères comptés en octets, un choix pris pour une erreur | Vérifier un constat avant de le corriger |
+| Une faille du formulaire classée « élevée » sans mesure (erreur de Claude) | Déduite d'un schéma de l'architecture, pas d'une mesure | Ma mesure l'a infirmée, et a révélé un autre point, corrigé dans la PR #64 |
+| Deux modifications du formulaire faites directement sur la branche principale (7 octobre) | Une correction rapide dans l'éditeur de GitHub, hors pull request | La règle vaut aussi pour moi. La protection de branche n'existe pas pour un dépôt privé en offre gratuite : la discipline doit la remplacer |
+| Deux hypothèses fausses après la revue du 8 octobre (erreur de Claude) | Un mail rejeté comme spam attribué à l'authentification du domaine, au lieu du filtre de l'hébergeur ; des envois directs sur la branche principale attribués au workflow, au lieu de mes dépôts de photos | Même leçon : vérifier un constat avant de le présenter |
 
 ## Réflexes cyber appliqués
 
@@ -177,12 +193,14 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 | Moindre privilège | Hébergeur relié à un seul dépôt ; workflow en deux jobs : la machine qui ouvre les photos n'a jamais le jeton d'écriture, permissions vides par défaut |
 | Zéro confiance | Le second job contrôle le travail du premier avant de publier : fichiers autorisés seulement, ni lien symbolique ni exécutable |
 | Sécurité de la chaîne d'approvisionnement | Actions figées par empreinte, modules vérifiés par empreinte, mises à jour relues avant fusion ; bibliothèque d'envoi de mails suivie par un fichier de verrouillage |
-| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 63 PR en neuf jours |
+| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 68 PR en onze jours |
 | Validation des entrées, tout ou rien | Le workflow refuse tout dépôt douteux sans rien modifier, liens symboliques compris |
 | Limiter les fuites d'information | `robots.txt` et commentaires publics sans détails internes ; version de PHP masquée |
-| Minimisation des données | Métadonnées des photos retirées (téléphone, date, GPS) ; photos brutes inaccessibles depuis le web ; polices servies localement |
+| Minimisation des données | Métadonnées des photos retirées (téléphone, date, GPS) ; photos brutes inaccessibles depuis le web ; polices servies localement ; journal de test vidé de mes adresses IP |
+| Pseudonymisation | Adresses des visiteurs jamais gardées en clair : empreintes à clé secrète, effacées rapidement |
+| Mesurer avant de conclure | La faille supposée du formulaire, infirmée par une mesure (journal temporaire, `ifconfig.me`) avant toute correction |
 | Défense en profondeur | Politique de sécurité du contenu, en-têtes de sécurité, code tiers et fichiers internes bloqués, page par défaut supprimée |
-| Défaillance sûre | Protections serveur hors des blocs `<IfModule>` : une panne se voit au lieu de laisser fuir. Galerie illisible : le mur se masque |
+| Défaillance sûre | Protections serveur hors des blocs `<IfModule>` : une panne se voit au lieu de laisser fuir. Galerie illisible : le mur se masque ; formulaire arrêté si sa configuration est incomplète |
 | Penser à la détection | `403` gardé sur les dossiers internes : une tentative de reconnaissance reste lisible dans les journaux |
 | Changement prudent | HSTS par paliers : 60 secondes, puis une semaine, avec vérification en ligne à chaque étape |
 | Secrets hors du dépôt | Identifiants du formulaire hors de la racine web et hors du dépôt, lui-même privé |
@@ -194,13 +212,15 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 
 - **Toiles noires sur Android** jusqu'au premier défilement : mesurer sur l'appareil (débogage USB, onglet Réseau) avant tout nouveau correctif.
 - **Poids des pages** : sur un écran haute définition, la miniature de 640 px est trop petite et la galerie charge les images complètes, près de 28 Mo pour 62 œuvres. Il faut une taille intermédiaire. L'accueil, lui, charge toutes les miniatures pour son mur (5,6 Mo) : il faut en limiter le nombre.
-- **Les dernières toiles** : leur écrire une description (texte alternatif) et un vrai titre, là où il ressemble encore à un nom de fichier.
+- **Authentification des mails** : publier SPF, DKIM et DMARC, pour que personne ne puisse envoyer de faux mails au nom du domaine.
+- **Descriptions obligatoires** : une vérification automatique qui signale une toile sans vraie description dans une pull request.
+- **Relier ce dossier au code** : le dépôt du site reste privé. Des liens et des extraits choisis et relus à la main, jamais de copie automatique d'un dépôt à l'autre.
 - **HSTS** : un mois, puis un an, après vérification à chaque palier.
-- **Le reste** : pied de page sur toutes les pages, ménage des branches obsolètes, et une page « Sous le capot » qui expliquera les principes de sécurité du site, jamais ses réglages, avec un fichier `security.txt`.
+- **Le reste** : ménage des branches obsolètes, et une page « Sous le capot » qui expliquera les principes de sécurité du site, jamais ses réglages, avec un fichier `security.txt`.
 
 Me contacter : par le [formulaire du site](https://djos-galley.online/about.html).
 
-## Annexe : les 63 pull requests
+## Annexe : les 68 pull requests
 
 <details>
 <summary>Afficher la liste</summary>
@@ -270,5 +290,10 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #61 | 06/10 | Ajoute 3 peintures | fusionnée |
 | #62 | 06/10 | Ajoute la peinture « fresque-1 » | fusionnée |
 | #63 | 06/10 | Ajoute la peinture « fresque-2 » | fusionnée |
+| #64 | 07/10 | Protège le formulaire : clé secrète, origine et configuration | fusionnée |
+| #65 | 07/10 | Ajoute 3 peintures | fusionnée |
+| #66 | 07/10 | Ajoute la peinture « Château » | fusionnée |
+| #67 | 08/10 | Décrit dix peintures et corrige cinq titres | fusionnée |
+| #68 | 08/10 | Ajoute le pied de page au portfolio et à la page À propos | fusionnée |
 
 </details>

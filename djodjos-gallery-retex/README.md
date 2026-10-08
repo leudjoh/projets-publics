@@ -12,7 +12,7 @@ Site : [djos-galley.online](https://djos-galley.online) · Version PDF : [Djod
 
 Djodjo's Gallery est le site vitrine de mes peintures : street art, lettrages graffiti, personnages, machines. Il ne vend rien. Il me sert aussi de terrain d'entraînement pour ma reconversion vers la cybersécurité.
 
-Du 28 septembre au 8 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **68 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-sept viennent du workflow d'ajout de toiles, deux de Dependabot ; les 49 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
+Du 28 septembre au 8 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **70 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-sept viennent du workflow d'ajout de toiles, deux de Dependabot ; les 51 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
 
 | Indicateur | Avant | Après |
 |---|---|---|
@@ -27,7 +27,7 @@ Du 28 septembre au 8 octobre 2026, le site est passé de fichiers déposés à
 | Erreurs dans la galerie (3 octobre) | 3 doublons, 1 image cassée | 0 |
 | Titre principal (`h1`) | le logo, sur les trois pages | un par page, propre à chaque page |
 
-**Ce que le projet m'a fait pratiquer :** Git et GitHub (branches, pull requests, relecture), GitHub Actions, sécurité web (CSP, HSTS, en-têtes HTTP), sécurité de la chaîne d'approvisionnement, fuites d'information (OWASP WSTG), RGPD et pseudonymisation (HMAC), accessibilité (axe, navigation au clavier), référencement (Search Console, redirections), lecture des en-têtes avec `curl`, règles Apache (`.htaccess`), travail encadré avec une IA.
+**Ce que le projet m'a fait pratiquer :** Git et GitHub (branches, pull requests, relecture), GitHub Actions, sécurité web (CSP, HSTS, en-têtes HTTP), sécurité de la chaîne d'approvisionnement, fuites d'information (OWASP WSTG), RGPD et pseudonymisation (HMAC), divulgation coordonnée (`security.txt`), accessibilité (axe, navigation au clavier), référencement (Search Console, redirections), lecture des en-têtes avec `curl`, règles Apache (`.htaccess`), travail encadré avec une IA.
 
 > Le code du site est dans un dépôt privé. Les numéros de pull request (PR) servent de repères ; l'annexe les liste toutes.
 
@@ -45,7 +45,8 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 | Les vérifications sur le site en ligne (`curl`, console du navigateur) et Search Console, propriété vérifiée par DNS | Le diagnostic de ce que Google montrait, à partir de ces vérifications |
 | Les photos et les titres des toiles, les décisions de consentement, le choix des descriptions Google et de l'image de partage | L'explication de chaque choix et de chaque erreur, les miennes comme les siennes |
 | La série Persos, créée seul sans aide au code ; l'en-tête HSTS, trouvé moi-même en exercice guidé | La correction du formulaire de contact (PR #64), testée sur un serveur PHP local |
-| La mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | |
+| La mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | La page « Sous le capot » et son fichier `security.txt` (PR #69 et #70) |
+| La validation des textes de « Sous le capot », et ce qu'elle ne doit jamais dire | |
 
 ## La méthode
 
@@ -56,7 +57,7 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 5. **Un humain fusionne** : Claude n'a jamais poussé sur la branche principale.
 6. **Vérifier en ligne après la fusion** : codes de réponse et en-têtes avec `curl -I`, console du navigateur, Search Console. L'IA travaille dans un environnement isolé qui ne joint pas le site : ces vérifications passent par moi.
 
-**`CLAUDE.md`, la mémoire du projet.** Ce fichier, dans le dépôt, décrit les conventions et les règles de sécurité : aucun secret dans le dépôt, aucune ressource chargée chez un tiers, contraintes de la politique de sécurité du contenu, commentaires publics sans détails internes, tests à faire avant chaque PR. L'IA le relit à chaque session : les garde-fous sont écrits une fois, au lieu d'être répétés à chaque conversation.
+**`CLAUDE.md`, la mémoire du projet.** Ce fichier, dans le dépôt, décrit les conventions et les règles de sécurité : aucun secret dans le dépôt, aucune ressource chargée chez un tiers, contraintes de la politique de sécurité du contenu, commentaires publics sans détails internes, tests à faire avant chaque PR. L'IA le relit à chaque session : les garde-fous sont écrits une fois, au lieu d'être répétés à chaque conversation. Depuis le 8 octobre, il impose aussi un suivi : chaque action de Claude est notée au fil de la tâche dans le résumé de l'état du site, et Claude demande à la fin de chaque tâche si ce dossier doit être mis à jour.
 
 **Travailler avec une IA, sans lui donner les clés.** Claude n'accède qu'au dépôt du site, sur autorisation, et ne fusionne rien. Ses propositions passent par la même relecture que n'importe quelle contribution. Ses erreurs figurent dans le tableau des incidents : c'est la relecture qui les a rattrapées.
 
@@ -152,7 +153,7 @@ Le nouveau workflow a été testé sur une branche jetable (PR #57, fermée), pu
 
 **403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une erreur 404, pour ne pas confirmer qu'ils existent ? La réponse reste 403 : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur un dossier interne, dans les journaux du serveur, est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
 
-### 5. Formulaire et finitions (7 – 8 octobre, PR #64 à #68)
+### 5. Formulaire et finitions (7 – 8 octobre, PR #64 à #70)
 
 **Le formulaire de contact, en exercice guidé** (PR #64). La revue de code soupçonnait la limite d'envois de compter la mauvaise adresse, à cause du CDN de l'hébergeur. Claude m'a donné un indice plutôt que la réponse, et j'ai mesuré : une ligne de journal temporaire, un envoi depuis le PC puis depuis le téléphone en 4G, et une comparaison avec `ifconfig.me`. Verdict : l'hypothèse était fausse. Mais la mesure a révélé un autre point, corrigé dans la même PR.
 
@@ -163,6 +164,8 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 **Les dernières toiles** (PR #65 à #67). Quatre toiles de plus : la galerie en compte 66. Les dix plus récentes avaient pour description leur seul titre, faute de mieux : un lecteur d'écran lisait « fresque-1 ». Claude a écrit les dix descriptions après avoir regardé les toiles, et j'ai choisi cinq nouveaux titres à la place de ceux qui ressemblaient à des noms de fichiers.
 
 **Le pied de page partout** (PR #68). La mention « conçu, codé et sécurisé par Djodjo et Claude (IA) » figure maintenant sur toutes les pages, pas seulement sur l'accueil.
+
+**Sous le capot** (PR #69 et #70). Une nouvelle page, dans le menu, explique aux visiteurs comment le site les protège : ce que reçoit leur navigateur, le formulaire de contact, leur vie privée, la façon dont le site est construit, et comment signaler une faille. Elle s'en tient aux principes, jamais aux réglages : aucun seuil, aucune durée, aucun nom de fichier interne ni d'outil. C'est la règle de ce dossier : tout ce qu'une page publique dit, un attaquant le lit aussi. Un fichier `security.txt` (norme RFC 9116) indique aux chercheurs en sécurité où signaler une faille. La page renvoie vers ce retour d'expérience par un simple lien : rien n'est chargé chez GitHub avant le clic. Le menu passe à quatre liens, réglés pour tenir sur une seule ligne dès 360 px de large.
 
 ## Incidents et leçons
 
@@ -184,6 +187,7 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Trois constats faux dans la revue de code (erreur de Claude) | Une commande qui n'affichait qu'une partie d'un fichier, des caractères comptés en octets, un choix pris pour une erreur | Vérifier un constat avant de le corriger |
 | Une faille du formulaire classée « élevée » sans mesure (erreur de Claude) | Déduite d'un schéma de l'architecture, pas d'une mesure | Ma mesure l'a infirmée, et a révélé un autre point, corrigé dans la PR #64 |
 | Deux modifications du formulaire faites directement sur la branche principale (7 octobre) | Une correction rapide dans l'éditeur de GitHub, hors pull request | La règle vaut aussi pour moi. La protection de branche n'existe pas pour un dépôt privé en offre gratuite : la discipline doit la remplacer |
+| Le résumé de l'état du site en retard (8 octobre, erreur de Claude) | Une conversation a fait fusionner deux PR sans le tenir à jour : la conversation suivante ne l'a vu qu'en relisant le dépôt | Une règle de plus dans `CLAUDE.md` : chaque action est notée au fil de la tâche |
 | Deux hypothèses fausses après la revue du 8 octobre (erreur de Claude) | Un mail rejeté comme spam attribué à l'authentification du domaine, au lieu du filtre de l'hébergeur ; des envois directs sur la branche principale attribués au workflow, au lieu de mes dépôts de photos | Même leçon : vérifier un constat avant de le présenter |
 
 ## Réflexes cyber appliqués
@@ -193,9 +197,9 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Moindre privilège | Hébergeur relié à un seul dépôt ; workflow en deux jobs : la machine qui ouvre les photos n'a jamais le jeton d'écriture, permissions vides par défaut |
 | Zéro confiance | Le second job contrôle le travail du premier avant de publier : fichiers autorisés seulement, ni lien symbolique ni exécutable |
 | Sécurité de la chaîne d'approvisionnement | Actions figées par empreinte, modules vérifiés par empreinte, mises à jour relues avant fusion ; bibliothèque d'envoi de mails suivie par un fichier de verrouillage |
-| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 68 PR en onze jours |
+| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 70 PR en onze jours |
 | Validation des entrées, tout ou rien | Le workflow refuse tout dépôt douteux sans rien modifier, liens symboliques compris |
-| Limiter les fuites d'information | `robots.txt` et commentaires publics sans détails internes ; version de PHP masquée |
+| Limiter les fuites d'information | `robots.txt` et commentaires publics sans détails internes ; version de PHP masquée ; page « Sous le capot » en principes, jamais en réglages |
 | Minimisation des données | Métadonnées des photos retirées (téléphone, date, GPS) ; photos brutes inaccessibles depuis le web ; polices servies localement ; journal de test vidé de mes adresses IP |
 | Pseudonymisation | Adresses des visiteurs jamais gardées en clair : empreintes à clé secrète, effacées rapidement |
 | Mesurer avant de conclure | La faille supposée du formulaire, infirmée par une mesure (journal temporaire, `ifconfig.me`) avant toute correction |
@@ -207,6 +211,7 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Tester avant la production | Règles serveur testées sur un Apache local, y compris avec un module coupé ; workflow testé sur une branche jetable |
 | Lire les en-têtes HTTP | `curl -I` pour vérifier une mise en ligne, suivre une redirection, repérer le CDN de l'hébergeur et mesurer son temps de réponse |
 | Transparence | Usage de l'IA affiché sur le site ; erreurs de l'IA listées ici comme les autres |
+| Divulgation coordonnée | Un fichier `security.txt` (RFC 9116) et une section de « Sous le capot » disent comment signaler une faille |
 
 ## La suite
 
@@ -214,13 +219,15 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 - **Poids des pages** : sur un écran haute définition, la miniature de 640 px est trop petite et la galerie charge les images complètes, près de 28 Mo pour 62 œuvres. Il faut une taille intermédiaire. L'accueil, lui, charge toutes les miniatures pour son mur (5,6 Mo) : il faut en limiter le nombre.
 - **Authentification des mails** : publier SPF, DKIM et DMARC, pour que personne ne puisse envoyer de faux mails au nom du domaine.
 - **Descriptions obligatoires** : une vérification automatique qui signale une toile sans vraie description dans une pull request.
-- **Relier ce dossier au code** : le dépôt du site reste privé. Des liens et des extraits choisis et relus à la main, jamais de copie automatique d'un dépôt à l'autre.
+- **Relier ce dossier au code** : le site renvoie déjà ici, depuis sa page « Sous le capot ». Le dépôt du site reste privé : des extraits choisis et relus à la main, jamais de copie automatique d'un dépôt à l'autre.
 - **HSTS** : un mois, puis un an, après vérification à chaque palier.
-- **Le reste** : ménage des branches obsolètes, et une page « Sous le capot » qui expliquera les principes de sécurité du site, jamais ses réglages, avec un fichier `security.txt`.
+- **Un livre d'or, codé par moi** : HTML, puis JavaScript, puis PHP, avec Claude en relecteur qui donne des indices plutôt que des réponses. Je finirai en l'attaquant moi-même : injection de script, envois en masse, champs trop longs.
+- **Retirer une toile par un workflow que j'écrirai moi-même en Python**, sur les règles du workflow d'ajout : validation en tout ou rien, pull request, jeton d'écriture réservé à la dernière étape.
+- **Le reste** : ménage des branches obsolètes.
 
 Me contacter : par le [formulaire du site](https://djos-galley.online/about.html).
 
-## Annexe : les 68 pull requests
+## Annexe : les 70 pull requests
 
 <details>
 <summary>Afficher la liste</summary>
@@ -295,5 +302,7 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #66 | 07/10 | Ajoute la peinture « Château » | fusionnée |
 | #67 | 08/10 | Décrit dix peintures et corrige cinq titres | fusionnée |
 | #68 | 08/10 | Ajoute le pied de page au portfolio et à la page À propos | fusionnée |
+| #69 | 08/10 | Ajoute la page « Sous le capot » et security.txt | fusionnée |
+| #70 | 08/10 | Ajoute Sous le capot au menu et le lien vers le retour d'expérience | fusionnée |
 
 </details>

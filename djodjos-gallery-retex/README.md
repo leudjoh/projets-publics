@@ -1,6 +1,6 @@
 # Djodjo's Gallery — Retour d'expérience
 
-**Refondre et sécuriser un site vitrine en onze jours, avec une IA**
+**Refondre et sécuriser un site vitrine en quinze jours, avec une IA**
 
 Geoffroy, alias Djodjo · en reconversion vers la cybersécurité (blue team) · octobre 2026
 
@@ -12,7 +12,7 @@ Site : [djos-galley.online](https://djos-galley.online) · Version PDF : [Djod
 
 Djodjo's Gallery est le site vitrine de mes peintures : street art, lettrages graffiti, personnages, machines. Il ne vend rien. Il me sert aussi de terrain d'entraînement pour ma reconversion vers la cybersécurité.
 
-Du 28 septembre au 8 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **70 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-sept viennent du workflow d'ajout de toiles, deux de Dependabot ; les 51 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
+Du 28 septembre au 12 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **75 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-sept viennent du workflow d'ajout de toiles, deux de Dependabot ; les 56 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
 
 | Indicateur | Avant | Après |
 |---|---|---|
@@ -47,6 +47,7 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 | La série Persos, créée seul sans aide au code ; l'en-tête HSTS, trouvé moi-même en exercice guidé | La correction du formulaire de contact (PR #64), testée sur un serveur PHP local |
 | La mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | La page « Sous le capot » et son fichier `security.txt` (PR #69 et #70) |
 | La validation des textes de « Sous le capot », et ce qu'elle ne doit jamais dire | |
+| Le choix de la modération a priori du livre d'or, du menu, du lien dans la bio et de rester sous pseudonyme | Le livre d'or, ses tests d'abus, la page de mentions légales (PR #72 et #75) |
 
 ## La méthode
 
@@ -67,7 +68,7 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 
 **Ce que l'IA change pour moi.** J'ai découvert l'IA avec Claude, et c'est un compagnon de travail remarquable. En une semaine, j'ai fait ce qui m'aurait pris, selon mon estimation, deux mois à plein temps. Mais produire avec une IA est un travail en soi : il faut formuler, relire et vérifier. L'IA a aussi un revers : je codais moins moi-même, et j'avais l'impression de pouvoir m'en tirer avec quelques notions. Vu la vitesse à laquelle Claude écrit et teste du code, apprendre à coder m'a même paru inaccessible, et presque obsolète. C'est un piège quand on vise la cybersécurité, où il faut comprendre ce qu'on défend : le but n'est pas d'écrire aussi vite qu'une IA, mais de savoir lire et juger ce qu'elle écrit. J'ai donc gardé des exercices à faire seul, avec un simple indice : l'en-tête HSTS, puis l'adresse IP réelle des visiteurs du formulaire.
 
-## Cinq temps
+## Six temps
 
 ![Chronologie : fondations, refonte, durcissement, visibilité et revue, formulaire et finitions](images/chronologie.png)
 
@@ -165,7 +166,24 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 
 **Le pied de page partout** (PR #68). La mention « conçu, codé et sécurisé par Djodjo et Claude (IA) » figure maintenant sur toutes les pages, pas seulement sur l'accueil.
 
-**Sous le capot** (PR #69 et #70). Une nouvelle page, dans le menu, explique aux visiteurs comment le site les protège : ce que reçoit leur navigateur, le formulaire de contact, leur vie privée, la façon dont le site est construit, et comment signaler une faille. Elle s'en tient aux principes, jamais aux réglages : aucun seuil, aucune durée, aucun nom de fichier interne ni d'outil. C'est la règle de ce dossier : tout ce qu'une page publique dit, un attaquant le lit aussi. Un fichier `security.txt` (norme RFC 9116) indique aux chercheurs en sécurité où signaler une faille. La page renvoie vers ce retour d'expérience par un simple lien : rien n'est chargé chez GitHub avant le clic. Le menu passe à quatre liens, réglés pour tenir sur une seule ligne dès 360 px de large.
+**Sous le capot** (PR #69 et #70). Une nouvelle page, d'abord dans le menu (elle est passée dans le pied de page le 12 octobre, voir le temps 6), explique aux visiteurs comment le site les protège : ce que reçoit leur navigateur, le formulaire de contact, leur vie privée, la façon dont le site est construit, et comment signaler une faille. Elle s'en tient aux principes, jamais aux réglages : aucun seuil, aucune durée, aucun nom de fichier interne ni d'outil. C'est la règle de ce dossier : tout ce qu'une page publique dit, un attaquant le lit aussi. Un fichier `security.txt` (norme RFC 9116) indique aux chercheurs en sécurité où signaler une faille. La page renvoie vers ce retour d'expérience par un simple lien : rien n'est chargé chez GitHub avant le clic. Le menu passe à quatre liens, réglés pour tenir sur une seule ligne dès 360 px de large.
+
+### 6. Livre d'or et mentions légales (8 – 12 octobre, PR #71 à #75)
+
+**Une règle de suivi** (PR #71). Chaque action de Claude sur le projet est notée au fil de la tâche, et Claude demande à la fin de chaque tâche si ce retour d'expérience doit être mis à jour. C'est la réponse à l'incident du 8 octobre.
+
+**Le livre d'or, finalement codé par Claude** (PR #72). J'avais prévu de l'écrire moi-même, avec Claude en relecteur. Faute de temps, j'ai changé d'avis : Claude l'a codé en m'expliquant chaque étape, et j'ai relu. Ce choix change le partage du travail, et je le dis ici plutôt que de laisser croire le contraire. Le principe tient en trois points :
+- **Rien n'est publié automatiquement et rien n'est stocké sur le serveur.** Un message validé par le serveur m'arrive par e-mail, avec la ligne prête à ajouter dans un fichier de messages ; je la publie par une pull request, comme n'importe quel changement. Les autres sont supprimés. Cette modération a priori m'évite une page d'administration à protéger (authentification, protection contre les requêtes forgées, limite de tentatives) et des données personnelles à garder.
+- **Un message est du texte, jamais du code.** Pour qu'un visiteur ne puisse pas faire exécuter un script aux autres (faille de type XSS stockée), la page n'écrit jamais un message comme du HTML. Le fichier des messages en contient un par ligne : une ligne cassée est ignorée sans casser les autres, ce qui compte quand on le modifie à la main.
+- **Le serveur ne fait pas confiance au navigateur.** Il vérifie lui-même les longueurs, refuse les caractères invisibles ou qui inversent le sens de lecture, les liens et les adresses e-mail, et limite les envois, par visiteur et pour tout le site (sans cette seconde limite, mille adresses différentes noieraient ma boîte de réception). Il reprend les protections du formulaire de contact.
+
+Le code commun aux deux formulaires a été regroupé dans un seul fichier, pour qu'un correctif vaille pour les deux : le comportement du contact a été comparé avant et après sur la même batterie de tests, avec des résultats identiques. Avant la fusion, Claude a joué une trentaine de cas d'abus (messages trop longs, données du mauvais type, caractères piégés, envois en rafale) et vérifié dans un navigateur qu'un message contenant du code s'affiche comme du texte. Ces tests ont trouvé **un vrai défaut de l'ancien formulaire de contact** : un champ envoyé sous forme de liste provoquait une erreur fatale côté serveur. Corrigé dans la même PR : il répond maintenant comme à un champ vide.
+
+**Le menu** (PR #72). Le livre d'or remplace « Sous le capot » dans le menu, qui garde quatre liens ; « Sous le capot » passe dans le pied de page. Claude avait d'abord annoncé un menu à cinq liens, alors que les règles du projet exigent une seule ligne dès 360 px : c'est moi qui ai tranché.
+
+**Faire remarquer la page déplacée** (PR #75). Une page de sécurité reléguée dans le pied de page est moins vue d'un recruteur. J'ai choisi le moyen le plus discret : dans la bio, le mot « sécurise » est devenu un lien vers « Sous le capot ».
+
+**Mentions légales** (PR #75). Je ne vends rien et je publie sous un pseudonyme. La loi autorise alors un éditeur non professionnel à rester anonyme, à condition que son hébergeur connaisse son identité et que la page nomme l'hébergeur, avec son adresse et son téléphone. L'hébergeur ne publie pas de numéro de téléphone : la page ne l'invente pas. Elle explique aussi, sans réglages, ce qui est fait des données du formulaire de contact, du livre d'or et de l'adresse IP, annonce l'absence de cookies et rappelle mes droits. C'est la seule page du site qui nomme l'hébergeur, parce que la loi l'exige : la page « Sous le capot » et ce dossier continuent de ne pas le faire.
 
 ## Incidents et leçons
 
@@ -189,6 +207,8 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Deux modifications du formulaire faites directement sur la branche principale (7 octobre) | Une correction rapide dans l'éditeur de GitHub, hors pull request | La règle vaut aussi pour moi. La protection de branche n'existe pas pour un dépôt privé en offre gratuite : la discipline doit la remplacer |
 | Le résumé de l'état du site en retard (8 octobre, erreur de Claude) | Une conversation a fait fusionner deux PR sans le tenir à jour : la conversation suivante ne l'a vu qu'en relisant le dépôt | Une règle de plus dans `CLAUDE.md` : chaque action est notée au fil de la tâche |
 | Deux hypothèses fausses après la revue du 8 octobre (erreur de Claude) | Un mail rejeté comme spam attribué à l'authentification du domaine, au lieu du filtre de l'hébergeur ; des envois directs sur la branche principale attribués au workflow, au lieu de mes dépôts de photos | Même leçon : vérifier un constat avant de le présenter |
+| Un menu à cinq liens annoncé (12 octobre, erreur de Claude) | Les règles du projet imposent une seule ligne dès 360 px ; elles n'avaient pas été relues avant l'annonce | Un lien s'ajoute au menu en en retirant un autre : « Sous le capot » est passé dans le pied de page |
+| Deux PR fusionnées dans une branche intermédiaire, pas dans la branche principale (12 octobre, erreur de Claude) | Pour découper le travail, Claude avait empilé les PR #73 et #74 sur la branche de la #72, que j'avais déjà fusionnée | Leur contenu n'était pas en ligne. Tout a été repris dans la PR #75, qui part de la branche principale. Des PR empilées demandent de vérifier leur cible avant de les fusionner |
 
 ## Réflexes cyber appliqués
 
@@ -197,7 +217,7 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Moindre privilège | Hébergeur relié à un seul dépôt ; workflow en deux jobs : la machine qui ouvre les photos n'a jamais le jeton d'écriture, permissions vides par défaut |
 | Zéro confiance | Le second job contrôle le travail du premier avant de publier : fichiers autorisés seulement, ni lien symbolique ni exécutable |
 | Sécurité de la chaîne d'approvisionnement | Actions figées par empreinte, modules vérifiés par empreinte, mises à jour relues avant fusion ; bibliothèque d'envoi de mails suivie par un fichier de verrouillage |
-| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 70 PR en onze jours |
+| Gestion des changements | Une branche et une PR par sujet, relue par un humain ; 75 PR en quinze jours |
 | Validation des entrées, tout ou rien | Le workflow refuse tout dépôt douteux sans rien modifier, liens symboliques compris |
 | Limiter les fuites d'information | `robots.txt` et commentaires publics sans détails internes ; version de PHP masquée ; page « Sous le capot » en principes, jamais en réglages |
 | Minimisation des données | Métadonnées des photos retirées (téléphone, date, GPS) ; photos brutes inaccessibles depuis le web ; polices servies localement ; journal de test vidé de mes adresses IP |
@@ -212,6 +232,8 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 | Lire les en-têtes HTTP | `curl -I` pour vérifier une mise en ligne, suivre une redirection, repérer le CDN de l'hébergeur et mesurer son temps de réponse |
 | Transparence | Usage de l'IA affiché sur le site ; erreurs de l'IA listées ici comme les autres |
 | Divulgation coordonnée | Un fichier `security.txt` (RFC 9116) et une section de « Sous le capot » disent comment signaler une faille |
+| Sortie sûre | Un message de visiteur est affiché comme du texte, jamais comme du code : un script collé dans le livre d'or ne s'exécute pas (testé dans un navigateur) |
+| Obligations légales et vie privée | Mentions légales d'un éditeur non professionnel sous pseudonyme, information sur les données traitées, aucun cookie ni traceur donc pas de bandeau |
 
 ## La suite
 
@@ -221,13 +243,13 @@ Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine é
 - **Descriptions obligatoires** : une vérification automatique qui signale une toile sans vraie description dans une pull request.
 - **Relier ce dossier au code** : le site renvoie déjà ici, depuis sa page « Sous le capot ». Le dépôt du site reste privé : des extraits choisis et relus à la main, jamais de copie automatique d'un dépôt à l'autre.
 - **HSTS** : un mois, puis un an, après vérification à chaque palier.
-- **Un livre d'or, codé par moi** : HTML, puis JavaScript, puis PHP, avec Claude en relecteur qui donne des indices plutôt que des réponses. Je finirai en l'attaquant moi-même : injection de script, envois en masse, champs trop longs.
+- **Le livre d'or, en ligne** : tester un vrai message de bout en bout, puis ajouter une vérification automatique du fichier des messages dans les pull requests (JSON valide, longueurs, pas de lien). Je l'attaquerai moi-même, en exercice : injection de script, envois en masse, champs trop longs. Une seconde version avec administration ne viendrait qu'avec une vraie protection (authentification, requêtes forgées, limite de tentatives).
 - **Retirer une toile par un workflow que j'écrirai moi-même en Python**, sur les règles du workflow d'ajout : validation en tout ou rien, pull request, jeton d'écriture réservé à la dernière étape.
 - **Le reste** : ménage des branches obsolètes.
 
 Me contacter : par le [formulaire du site](https://djos-galley.online/about.html).
 
-## Annexe : les 70 pull requests
+## Annexe : les 75 pull requests
 
 <details>
 <summary>Afficher la liste</summary>
@@ -304,5 +326,10 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #68 | 08/10 | Ajoute le pied de page au portfolio et à la page À propos | fusionnée |
 | #69 | 08/10 | Ajoute la page « Sous le capot » et security.txt | fusionnée |
 | #70 | 08/10 | Ajoute Sous le capot au menu et le lien vers le retour d'expérience | fusionnée |
+| #71 | 08/10 | Ajoute la règle de suivi : état du site et retour d'expérience | fusionnée |
+| #72 | 12/10 | Ajoute le livre d'or (modération a priori) et factorise le code des formulaires | fusionnée |
+| #73 | 12/10 | Lie « sécurise » de la bio à Sous le capot | fusionnée dans une branche intermédiaire, reprise dans la #75 |
+| #74 | 12/10 | Ajoute les mentions légales | fusionnée dans une branche intermédiaire, reprise dans la #75 |
+| #75 | 12/10 | Livre d'or : messages avant le formulaire, lien de bio, mentions légales | fusionnée |
 
 </details>

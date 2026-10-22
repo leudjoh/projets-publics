@@ -1,6 +1,6 @@
 # Djodjo's Gallery — Retour d'expérience
 
-**Refondre et sécuriser un site vitrine en vingt-quatre jours, avec une IA**
+**Refondre et sécuriser un site vitrine en vingt-cinq jours, avec une IA**
 
 Geoffroy, alias Djodjo · en reconversion vers la cybersécurité (blue team) · octobre 2026
 
@@ -12,7 +12,7 @@ Site : [djos-galley.online](https://djos-galley.online) · Version PDF : [Djod
 
 Djodjo's Gallery est le site vitrine de mes peintures : street art, lettrages graffiti, personnages, machines. Il ne vend rien. Il me sert aussi de terrain d'entraînement pour ma reconversion vers la cybersécurité.
 
-Du 28 septembre au 21 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **83 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-huit viennent du workflow d'ajout de toiles, deux de Dependabot ; les 63 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
+Du 28 septembre au 22 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **84 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-huit viennent du workflow d'ajout de toiles, deux de Dependabot ; les 64 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
 
 | Indicateur | Avant | Après |
 |---|---|---|
@@ -40,7 +40,7 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 | La relecture et la fusion de chaque pull request | Les tests avant chaque PR : navigateur automatisé (ordinateur et téléphone), Apache local, serveur PHP local, outil axe |
 | Les vérifications sur le site en ligne (`curl`, console du navigateur) et Search Console, propriété vérifiée par DNS | Le diagnostic de ce que Google montrait, à partir de ces vérifications |
 | Les photos et les titres des toiles, les décisions de consentement, le choix des descriptions Google et de l'image de partage | La rédaction des pull requests et de `CLAUDE.md` |
-| La série Persos, créée seul ; l'en-tête HSTS et la mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | La correction du formulaire (PR #64), la page « Sous le capot » (PR #69 et #70), le livre d'or et les mentions légales (PR #72, #75 et #79), les suites de la quatrième revue (PR #80 et #82), la coupure de PHP (PR #83) |
+| La série Persos, créée seul ; l'en-tête HSTS et la mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | La correction du formulaire (PR #64), la page « Sous le capot » (PR #69 et #70), le livre d'or et les mentions légales (PR #72, #75 et #79), les suites de la quatrième revue (PR #80 et #82), la coupure de PHP et son retrait (PR #83 et #84) |
 | La modération a priori du livre d'or, le menu, le lien dans la bio, le choix de rester sous pseudonyme, la durée de conservation des messages et les coordonnées de l'hébergeur | L'explication de chaque choix et de chaque erreur, les miennes comme les siennes |
 
 ## La méthode
@@ -85,7 +85,7 @@ Le site est déployé à chaque fusion sur la branche principale. Tout ce qui y 
 
 ![Le workflow d'ajout en deux jobs](images/workflow-securise.png)
 
-*Réflexes : moindre privilège, zéro confiance, sécurité de la chaîne d'approvisionnement, validation des entrées en tout ou rien, secrets hors du dépôt, gestion des changements (83 PR en vingt-quatre jours).*
+*Réflexes : moindre privilège, zéro confiance, sécurité de la chaîne d'approvisionnement, validation des entrées en tout ou rien, secrets hors du dépôt, gestion des changements (84 PR en vingt-cinq jours).*
 
 ### 2. Durcir le serveur
 
@@ -97,11 +97,11 @@ Le site est déployé à chaque fusion sur la branche principale. Tout ce qui y 
 - **403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une 404, pour ne pas confirmer qu'ils existent ? Non : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur un dossier interne, dans les journaux, est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
 
 - **Le dossier des images ne sert que des images** (PR #82). Le serveur refuse, sans l'exécuter, tout fichier de ce dossier qui n'est pas une image au nom attendu. C'est une seconde barrière derrière le contrôle du workflow : un script glissé un jour dans une pull request ne tournerait pas.
-- **Une faille critique annoncée avant son correctif** (PR #83). Le 20 octobre, deux failles critiques du cœur de PHP, qui permettent d'exécuter du code à distance, ont été rendues publiques avant leur correctif. Des attaques de masse étaient attendues dès sa publication. Je me suis posé trois questions : qui corrige, le correctif existe-t-il, faut-il couper le site ? Sur un hébergement mutualisé, c'est l'hébergeur qui installe PHP ; moi, je choisis la version, et je vérifie qu'elle est encore maintenue. Plutôt que de couper le site, Claude a proposé de ne couper que PHP : le site est statique, seuls les deux formulaires l'utilisent. Une règle temporaire du serveur refuse toute adresse PHP, sous toutes ses formes, avant qu'elle n'atteigne l'interpréteur, jusqu'à l'installation du correctif ; les formulaires affichent un message de pause, le reste du site ne change pas. Elle a été testée sur un Apache local avec une page témoin qui aurait laissé une trace si PHP avait tourné : elle n'a jamais tourné. J'ai validé et fusionné le jour même.
+- **Une faille critique annoncée avant son correctif** (PR #83 et #84). Le 20 octobre, deux failles critiques du cœur de PHP, qui permettent d'exécuter du code à distance, ont été rendues publiques avant leur correctif. Des attaques de masse étaient attendues dès sa publication. Je me suis posé trois questions : qui corrige, le correctif existe-t-il, faut-il couper le site ? Sur un hébergement mutualisé, c'est l'hébergeur qui installe PHP ; moi, je choisis la version, et je vérifie qu'elle est encore maintenue. Plutôt que de couper le site, Claude a proposé de ne couper que PHP : le site est statique, seuls les deux formulaires l'utilisent. Une règle temporaire du serveur a refusé toute adresse PHP, sous toutes ses formes, avant qu'elle n'atteigne l'interpréteur ; les formulaires affichaient un message de pause, le reste du site ne changeait pas. Elle a été testée sur un Apache local avec une page témoin qui aurait laissé une trace si PHP avait tourné : elle n'a jamais tourné. J'ai validé et fusionné le jour même. Le lendemain, le numéro de version affiché par l'hébergeur n'avait pas changé : le correctif avait été reporté dans la version en place, sans changer son numéro. Ce numéro ne prouvait donc rien ; j'ai demandé une confirmation écrite à l'hébergeur avant de retirer la règle par une nouvelle PR, et les formulaires sont revenus.
 
 ![Une adresse, une page : redirection www et page 404](images/www-et-404.jpg)
 
-*Réflexes : défense en profondeur, changement prudent, défaillance sûre, penser à la détection, tester avant la production, lire les en-têtes HTTP, réduire la surface en attendant un correctif.*
+*Réflexes : défense en profondeur, changement prudent, défaillance sûre, penser à la détection, tester avant la production, lire les en-têtes HTTP, réduire la surface en attendant un correctif, vérifier un correctif plutôt qu'un numéro de version.*
 
 ### 3. Ne rien dire de trop
 
@@ -204,7 +204,7 @@ Les erreurs de Claude sont regroupées par leçon ; chaque erreur reste compté
 
 Me contacter : par le [formulaire du site](https://djos-galley.online/about.html).
 
-## Annexe : les 83 pull requests
+## Annexe : les 84 pull requests
 
 <details>
 <summary>Afficher la liste</summary>
@@ -294,5 +294,6 @@ Me contacter : par le [formulaire du site](https://djos-galley.online/about.htm
 | #81 | — | Ajoute la peinture « Essai liste blanche » | fermée sans fusion |
 | #82 | 14/10 | Workflow : liste blanche par type de changement, et le dossier des images ne sert que des JPEG | fusionnée |
 | #83 | 21/10 | Met PHP à l'abri d'une faille critique annoncée | fusionnée |
+| #84 | 22/10 | Rétablit PHP : retire la coupure temporaire | fusionnée |
 
 </details>

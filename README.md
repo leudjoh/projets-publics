@@ -11,7 +11,7 @@ Ce dépôt regroupe tout ce que j'ai appris en codant — pas seulement de la cy
 | Dossier | Projet | Domaine |
 |---|---|---|
 | [`Rust/brutect`](Rust/brutect/README.md) | Détecteur de force brute SSH dans un `auth.log` | Blue team / forensique |
-| [`djodjos-gallery-retex`](djodjos-gallery-retex/README.md) | Retour d'expérience : refondre et sécuriser un site vitrine en 25 jours, avec une IA | Sécurité web, DevSecOps |
+| [`djodjos-gallery-retex`](djodjos-gallery-retex/README.md) | Retour d'expérience : refondre et sécuriser un site vitrine, avec une IA | Sécurité web, DevSecOps |
 | [`Python`](Python) | Outils réseau écrits ou réécrits pour apprendre | Réseau / offensif (apprentissage) |
 | [`PowerShell`](PowerShell) | Scripts d'administration Windows et Active Directory | Admin système / AD |
 | [`AWS`](AWS) | Modèle d'infrastructure haute disponibilité (IaC) | Cloud / réseau |
@@ -22,7 +22,7 @@ Un outil en ligne de commande qui lit un journal d'authentification Linux (`auth
 
 ### `djodjos-gallery-retex` — retour d'expérience sécurité web
 
-Le récit complet de la refonte et du durcissement d'un site vitrine ([djos-galley.online](https://djos-galley.online)) : 84 pull requests en 25 jours, toutes relues avant fusion. En-têtes de sécurité (CSP, HSTS), sécurité de la chaîne d'approvisionnement (workflow GitHub Actions en deux jobs, actions épinglées par empreinte), pseudonymisation RGPD (HMAC), divulgation coordonnée (`security.txt`), accessibilité, et la gestion d'une faille critique PHP annoncée avant son correctif. Le code du site est privé ; ce dossier en est le retour d'expérience, avec la liste des incidents et des leçons. **À lire : [`djodjos-gallery-retex/README.md`](djodjos-gallery-retex/README.md)** (version [PDF](djodjos-gallery-retex/Djodjos-Gallery-retour-experience.pdf) également).
+Le récit complet de la refonte et du durcissement d'un site vitrine ([djos-galley.online](https://djos-galley.online)), chaque modification relue avant fusion. En-têtes de sécurité (CSP, HSTS), sécurité de la chaîne d'approvisionnement (workflow GitHub Actions en deux jobs, actions épinglées par empreinte), pseudonymisation RGPD (HMAC), divulgation coordonnée (`security.txt`), accessibilité, et la gestion d'une faille critique PHP annoncée avant son correctif. Le code du site est privé ; ce dossier en est le retour d'expérience, avec la liste des incidents et des leçons. **À lire : [`djodjos-gallery-retex/README.md`](djodjos-gallery-retex/README.md)** (version [PDF](djodjos-gallery-retex/Djodjos-Gallery-retour-experience.pdf) également).
 
 ### `Python` — outils réseau
 

@@ -87,7 +87,7 @@ Je ne connaissais pas Rust en commençant ce projet. `brutect` a été développ
 
 Rust se prête bien à ce travail avec une IA : son compilateur, très strict, refuse un programme dès qu'une erreur de type, de mémoire ou un cas oublié est détecté, et explique précisément pourquoi. L'IA corrige ainsi ses erreurs avant même de lancer le programme, et ce qui compile a déjà passé de nombreuses vérifications.
 
-Merci à **SFEIR** d'avoir partagé sa méthode de travail avec l'IA (cadrer, construire, relire, livrer, capitaliser) lors du [workshop « Intégrer l'IA dans son SDLC »](https://clubgenai.github.io/workshop-software-development-life-cycle/) du Club GenAI. C'est elle qui m'a permis de livrer un binaire fonctionnel et testé dans un langage que je ne connaissais pas.
+Merci à **SFEIR** d'avoir partagé [sa méthode de travail avec l'IA](https://github.com/clubgenai/workshop-software-development-life-cycle) (cadrer, construire, relire, livrer, capitaliser). C'est elle qui m'a permis de livrer un binaire fonctionnel et testé dans un langage que je ne connaissais pas.
 
 ## Licence
 

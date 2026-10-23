@@ -14,6 +14,8 @@ Djodjo's Gallery est le site vitrine de mes peintures : street art, lettrages g
 
 Du 28 septembre au 22 octobre 2026, le site est passé de fichiers déposés à la main chez l'hébergeur à un projet versionné, déployé automatiquement, durci et relu. Le travail tient en **84 pull requests**, que j'ai toutes relues avant de les fusionner ou de les fermer. Dix-huit viennent du workflow d'ajout de toiles, deux de Dependabot ; les 64 autres ont été préparées avec **Claude (IA)**, l'assistant d'Anthropic.
 
+L'essentiel de la refonte a été fait en **quinze jours**. Ce n'est pas fini : la suite, je compte en faire davantage « seul », guidé par l'IA.
+
 | Indicateur | Avant | Après |
 |---|---|---|
 | Œuvres en ligne | 10, sans classement | 66, en six séries |
@@ -28,33 +30,66 @@ Du 28 septembre au 22 octobre 2026, le site est passé de fichiers déposés �
 
 > Le code du site est dans un dépôt privé. Les numéros de pull request (PR) servent de repères ; l'annexe les liste toutes.
 
+## Le site lui-même
+
+**Un en-tête qui dit ce que je fais** (PR #19). « Artiste peintre » devient « Street art & technoculture » : les machines que je peins, et la carrière tech que je vise.
+
+![En-tête avant et après](images/entete-avant-apres.jpg)
+
+**Un accueil qui raconte** (PR #24 à #27). Avant : une bannière fixe. Après : une accroche, « Chaque toile a son code. », un mur de toiles qui défile, les séries, une toile en gros plan, la bio, le contact.
+
+![Structure de l'accueil : un écran avant, six blocs après](images/accueil-structure.jpg)
+
+**Six séries, sans une ligne de code pour en ajouter une** (PR #22 et #23). Chaque série a son filtre et sa propre adresse. J'ai créé la série Persos seul, sans toucher au code.
+
+![Le portfolio avant et après](images/portfolio-avant-apres.jpg)
+
+**Des textes réécrits** (PR #36, #55 et #67). Un titre principal par page, une description pour Google qui commence par « street art », et pour chaque toile une description de ce qu'on voit. Avant, un lecteur d'écran lisait « fresque-1 ».
+
+*Lecteur d'écran : logiciel qui lit la page à voix haute, pour les personnes aveugles ou malvoyantes.*
+
+**Utilisable au clavier** (PR #38). La touche Tab sautait toutes les toiles, la visionneuse ne se fermait pas, le formulaire n'avait pas d'étiquettes. Tout est corrigé : zéro problème détecté par l'outil axe.
+
+![Visionneuse ouverte au clavier, focus sur le bouton Fermer](images/lightbox-clavier.jpg)
+
+**−82 % sur téléphone** (PR #7 et #29 à #31). Des miniatures, et le navigateur choisit la plus petite image qui suffit : la galerie passe de 13,1 à 2,4 Mo.
+
+**Un bel aperçu quand on partage un lien** (PR #50 et #51). Titre, description et image s'affichent sur WhatsApp, LinkedIn ou Discord. L'image est symétrique : WhatsApp la découpe parfois en carré.
+
+![Image d'aperçu affichée au partage d'un lien du site](images/apercu-partage.jpg)
+
+## Le projet en sept temps
+
+![Chronologie : fondations, refonte, durcissement, visibilité et revue, formulaire et finitions, livre d'or et mentions légales, revue et alerte](images/chronologie.png)
+
+La frise donne l'ordre des étapes. Plus bas, le travail est rangé par thème : chaque sujet n'y est raconté qu'une fois, avec ses PR.
+
 ## Qui a fait quoi
 
 Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude (IA) ». Voici le partage réel.
 
 | Moi (Geoffroy) | Claude (IA) |
 |---|---|
-| Objectifs, priorités et direction artistique ; l'idée de « Street art & technoculture », le nom des séries Horizons et Électrons libres | Diagnostics et quatre revues de code complètes |
-| Le choix de la maquette ; la correction et la validation de tous les textes, dont ceux de « Sous le capot » et ce qu'elle ne doit jamais dire | Maquettes de l'accueil, premiers jets des textes |
-| La création du dépôt et sa liaison avec l'hébergeur | Le code : HTML, CSS, JavaScript, PHP, Python, workflow GitHub Actions |
-| La relecture et la fusion de chaque pull request | Les tests avant chaque PR : navigateur automatisé (ordinateur et téléphone), Apache local, serveur PHP local, outil axe |
-| Les vérifications sur le site en ligne (`curl`, console du navigateur) et Search Console, propriété vérifiée par DNS | Le diagnostic de ce que Google montrait, à partir de ces vérifications |
-| Les photos et les titres des toiles, les décisions de consentement, le choix des descriptions Google et de l'image de partage | La rédaction des pull requests et de `CLAUDE.md` |
-| La série Persos, créée seul ; l'en-tête HSTS et la mesure de l'adresse IP réelle des visiteurs, en exercice guidé ; la clé secrète du formulaire, générée et installée par moi | La correction du formulaire (PR #64), la page « Sous le capot » (PR #69 et #70), le livre d'or et les mentions légales (PR #72, #75 et #79), les suites de la quatrième revue (PR #80 et #82), la coupure de PHP et son retrait (PR #83 et #84) |
-| La modération a priori du livre d'or, le menu, le lien dans la bio, le choix de rester sous pseudonyme, la durée de conservation des messages et les coordonnées de l'hébergeur | L'explication de chaque choix et de chaque erreur, les miennes comme les siennes |
+| Les objectifs, les priorités, la direction artistique ; « Street art & technoculture », les noms des séries Horizons et Électrons libres | Les diagnostics et quatre revues de code complètes |
+| Le choix de la maquette ; la correction et la validation de tous les textes, dont ce que « Sous le capot » ne doit jamais dire | Les maquettes de l'accueil, les premiers jets des textes |
+| Le dépôt et sa liaison avec l'hébergeur ; la relecture et la fusion de chaque pull request | Le code : HTML, CSS, JavaScript, PHP, Python, GitHub Actions |
+| Les vérifications en ligne (`curl`, console du navigateur) et Search Console, vérifiée par DNS | Les tests avant chaque PR : navigateur automatisé (ordinateur et téléphone), Apache et PHP en local, outil axe |
+| Les photos et les titres des toiles, le consentement, les descriptions Google, l'image de partage | La rédaction des pull requests et de `CLAUDE.md` |
+| La série Persos, créée seul ; en exercice guidé, l'en-tête HSTS et la mesure de l'adresse réelle des visiteurs ; la clé secrète du formulaire, générée et installée par moi ; le ménage des branches | Le formulaire corrigé (PR #64), « Sous le capot » (PR #69 et #70), le livre d'or et les mentions légales (PR #72, #75 et #79), les suites de la quatrième revue (PR #80 et #82), la coupure de PHP (PR #83 et #84) |
+| Les décisions : modération du livre d'or, menu, lien dans la bio, pseudonyme, durée de conservation, coordonnées de l'hébergeur | L'explication de chaque choix et de chaque erreur, les miennes comme les siennes |
 
 ## La méthode
 
-1. **Diagnostiquer d'abord** : le code, les textes et les toiles sont relus avant toute proposition.
+1. **Diagnostiquer avant de proposer** : le code, les textes et les toiles sont relus d'abord.
 2. **Montrer avant de coder** : maquettes avec les vraies toiles, captures avant chaque changement visuel.
-3. **Écrire les textes à part** : rédigés et validés dans un document partagé, puis intégrés en une seule PR.
-4. **Une branche et une pull request par sujet**, testée sur ordinateur et sur téléphone.
+3. **Écrire les textes à part**, les valider, puis les intégrer en une seule PR.
+4. **Un sujet, une branche, une pull request**, testée sur ordinateur et sur téléphone.
 5. **Un humain fusionne** : Claude n'a jamais poussé sur la branche principale.
-6. **Vérifier en ligne après la fusion** : codes de réponse et en-têtes avec `curl -I`, console du navigateur, Search Console. Ces vérifications passent par moi.
+6. **Vérifier en ligne après la fusion** : codes de réponse et en-têtes avec `curl -I`, console du navigateur, Search Console. C'est moi qui le fais.
 
-**`CLAUDE.md`, la mémoire du projet.** Ce fichier du dépôt décrit les conventions et les règles de sécurité : aucun secret dans le dépôt, aucune ressource chargée chez un tiers, commentaires publics sans détails internes, tests à faire avant chaque PR. L'IA le relit à chaque session : les garde-fous sont écrits une fois, au lieu d'être répétés à chaque conversation. Il impose aussi un suivi : chaque action de Claude est notée dans un résumé de l'état du site, qui permet de reprendre le travail ailleurs.
+**`CLAUDE.md`, la mémoire du projet.** Un fichier du dépôt où sont écrites les règles : aucun secret, rien chez un tiers, des commentaires publics sans détails internes, des tests avant chaque PR. L'IA le relit à chaque session : les garde-fous sont écrits une fois pour toutes. Chaque action de Claude est aussi notée dans un résumé de l'état du site, pour reprendre le travail ailleurs.
 
-**Travailler avec une IA, sans lui donner les clés.** Claude n'accède qu'au dépôt du site, sur autorisation, et ne fusionne rien. Ses propositions passent par la même relecture que n'importe quelle contribution. Ses erreurs figurent dans le tableau des incidents : c'est la relecture qui les a rattrapées.
+**Une IA, sans les clés.** Claude n'accède qu'au dépôt du site, sur autorisation, et ne fusionne rien. Ses propositions passent par la même relecture que n'importe quelle contribution. Ses erreurs sont dans les incidents : c'est la relecture qui les a rattrapées.
 
 **L'IA n'est pas illimitée.** Claude s'utilise avec une limite d'usage hebdomadaire. J'ai épuisé la mienne en six jours : le 7 octobre après-midi, la jauge était à 100 %, et je n'ai plus eu accès à Claude avant sa remise à zéro, le lendemain à 13 h. C'était une erreur de ma part. J'ai mené en parallèle deux très longues conversations en réflexion étendue, un mode où Claude réfléchit plus longtemps avant de répondre, et consomme donc beaucoup plus. Je l'avais activé dans la première, et la seconde l'a gardé par défaut sans que je m'en aperçoive. Le contenu y a gagné en qualité, mais la limite a fondu. Depuis, je vérifie ce réglage à l'ouverture de chaque conversation. J'ai aussi gardé trois habitudes : une conversation par sujet, un résumé de l'état du site pour reprendre ailleurs sans tout relire, et des captures recadrées.
 
@@ -64,24 +99,24 @@ Le pied de page du site dit « conçu, codé et sécurisé par Djodjo et Claude
 
 Pour sortir de ce piège pour de bon, j'ai mis en place des cours de Python avec Claude Code. Je travaille sur une machine virtuelle à laquelle je me connecte en SSH depuis Visual Studio Code : c'est moi qui écris le code dans l'éditeur, et Claude Code y joue le rôle de professeur. Dans ces cours, l'IA n'écrit pas à ma place : elle encadre mon apprentissage.
 
-## Le projet en sept temps
-
-![Chronologie : fondations, refonte, durcissement, visibilité et revue, formulaire et finitions, livre d'or et mentions légales, revue et alerte](images/chronologie.png)
-
-La frise donne l'ordre des étapes. La suite est rangée par thème : chaque sujet n'y est raconté qu'une fois, avec les PR qui le concernent.
-
 ## Le travail, par thème
 
 ### 1. Publier sans risque
 
-Le site est déployé à chaque fusion sur la branche principale. Tout ce qui y entre, code comme toiles, doit donc passer par une relecture.
+Chaque fusion sur la branche principale part en ligne. Rien n'y entre sans relecture, code comme toiles.
 
-- **Un dépôt privé, un accès limité.** Le site reste public, mais le code, l'historique et une éventuelle erreur de commit ne le sont pas. L'hébergeur est relié par OAuth à ce seul dépôt, pas au compte entier. Les identifiants du formulaire de contact sont dans un fichier hors de la racine web, et aucun fichier privé n'est suivi par Git.
-- **Ajouter une toile sans toucher au code** (PR #12, #22 et #48). Une photo déposée dans un dossier déclenche un workflow GitHub Actions. Il la redimensionne, retire ses métadonnées (téléphone, date, GPS), la range dans sa série et ouvre une pull request. J'ai préféré cela à une galerie listée automatiquement en PHP : le site reste statique, et un humain relit avant chaque publication. Une toile remplacée change de nom, sinon le cache de l'hébergeur garde l'ancienne image une semaine chez les visiteurs.
-- **Le workflow traité comme un serveur** (PR #42, #49 et #58). Il ouvre des fichiers venus de l'extérieur et peut écrire dans le dépôt. Les actions sont désignées par l'empreinte d'un commit plutôt que par une étiquette déplaçable, les modules Python sont vérifiés par empreinte, et Dependabot propose les mises à jour, que je relis. Depuis la troisième revue de code, il tourne en **deux jobs** : le premier traite les photos avec un jeton en lecture seule ; le second ne lance ni Python ni la bibliothèque d'images, contrôle le résultat du premier (fichiers autorisés seulement, ni lien symbolique ni exécutable), et lui seul ouvre la pull request. Les liens symboliques sont refusés : un lien vers une image déjà en ligne passait pour une nouvelle toile. Depuis la quatrième revue de code (PR #82), ce contrôle juge chaque fichier selon ce qu'on lui fait : une image ne peut être ajoutée que si c'est un vrai JPEG au nom attendu, une page existante ne peut être modifiée que sans contenu actif, et seules des images ou des photos déposées peuvent être supprimées. L'ancien contrôle laissait passer un fichier rendu exécutable sans que son contenu change.
-- **Le code tiers suivi** (PR #58). Le formulaire de contact s'appuie sur une bibliothèque d'envoi de mails, et rien ne surveillait sa version. Un fichier de verrouillage décrit maintenant exactement la version installée.
-- **Le ménage des branches, fait par moi dans le terminal.** Avant de supprimer une branche sur GitHub, je prouve qu'elle ne contient rien de perdu : `git branch -r --merged` pour celles déjà fusionnées, `git log` et `git diff` contre la branche principale pour les branches de test. J'ai aussi essayé une suppression en masse par exclusion : l'essai à blanc (`--dry-run`) a montré qu'elle aurait supprimé ma branche de travail en cours. Depuis, je nomme les branches à supprimer, comme une liste blanche, et je fais un essai à blanc avant toute action en masse.
-- **Tester sans risque.** La PR #41, ouverte exprès puis fermée, a prouvé qu'un jeton limité suffisait. Le workflow en deux jobs a été testé sur une branche jetable (PR #57), puis sur les quatre dépôts de photos suivants (PR #60 à #63), sans erreur. Le contrôle par type de changement a été éprouvé sur vingt patchs, dont dix-huit piégés, puis sur une branche jetable (PR #81, fermée).
+- **Un dépôt privé, un accès minimal.** Le site est public, pas son code ni son historique. L'hébergeur n'a accès qu'à ce dépôt, pas à tout mon compte. Aucun mot de passe dans Git.
+- **Ajouter une toile sans toucher au code** (PR #12, #22 et #48). Je dépose une photo. Un robot la redimensionne, efface ses métadonnées (téléphone, date, GPS), la range dans sa série et me propose une pull request. Je relis, je fusionne.
+
+    *Workflow GitHub Actions : une suite de tâches que GitHub exécute tout seul quand un événement se produit, ici l'arrivée d'une photo.*
+
+- **Le robot traité comme un suspect** (PR #42, #49, #58 et #82). Il ouvre des fichiers venus de l'extérieur et peut écrire dans le dépôt. Il travaille donc en deux étapes. La première traite les photos sans droit d'écriture. La seconde vérifie le résultat fichier par fichier, et elle seule ouvre la pull request. Un faux JPEG, un fichier rendu exécutable, un raccourci vers un autre fichier : refusés.
+
+    *Chaîne d'approvisionnement : tout le code des autres dont on dépend. Les outils du robot sont figés par empreinte : personne ne peut les remplacer en douce.*
+
+- **Le code tiers sous surveillance** (PR #58). La bibliothèque d'envoi de mails du formulaire a maintenant sa version verrouillée.
+- **Supprimer sans rien perdre.** J'ai fait le ménage des branches moi-même, dans le terminal. Une suppression en masse, essayée à blanc, aurait effacé ma branche de travail en cours. Depuis, je nomme ce que je supprime, et j'essaie à blanc d'abord.
+- **Tester sur des branches jetables** (PR #41, #57 et #81). Le contrôle du robot a été attaqué avec dix-huit fichiers piégés : tous refusés.
 
 ![Le workflow d'ajout en deux jobs](images/workflow-securise.png)
 
@@ -89,15 +124,27 @@ Le site est déployé à chaque fusion sur la branche principale. Tout ce qui y 
 
 ### 2. Durcir le serveur
 
-- **Moins de surface** (PR #8 et #9). Page par défaut de l'hébergeur supprimée, code tiers et fichiers cachés bloqués côté serveur, liste des dossiers désactivée.
-- **En-têtes de sécurité** (PR #39). Une politique de sécurité du contenu stricte : la page ne charge que des fichiers du site lui-même, et un script injecté serait bloqué par le navigateur. `Permissions-Policy` refuse caméra, micro et position. `X-Powered-By`, qui annonçait la version de PHP, est retiré.
-- **HSTS par paliers** (PR #40 et #54). Cet en-tête oblige le navigateur à rester en HTTPS. Mal réglé, il peut rendre un site inaccessible pendant toute sa durée. Il a commencé à 60 secondes, puis est passé à une semaine ; il s'allongera encore (un mois, puis un an), avec une vérification à chaque palier. J'ai trouvé la ligne moi-même, en exercice guidé.
-- **Une adresse, une page** (PR #54). Une recherche « djos gallery » affichait toujours l'ancien titre du site. Diagnostic avec `curl -I` et Search Console : l'adresse `www` et l'adresse principale répondaient toutes les deux `200`, et Google gardait une vieille copie de la version `www`. La balise `canonical` n'est qu'une suggestion ; une redirection `301` est un ordre. La même PR ajoute une page 404 qui garde son code d'erreur, sinon Google croirait que l'adresse existe. Le passage de `http` à `https` est déjà fait par le CDN de l'hébergeur : une règle de plus aurait pu faire tourner le site en boucle.
-- **Défaillance sûre** (PR #56). Les protections du `.htaccess` étaient rangées dans des blocs `<IfModule>` : si un module manque, Apache les ignore sans rien dire. Démonstration sur un Apache local, sans le module de réécriture : des fichiers internes répondaient `200`, et le contrôle de syntaxe disait « Syntax OK ». Hors de ces blocs, un module manquant donne une erreur 500 visible, et rien ne fuit. Vérifié en ligne : les pages répondent normalement, les fichiers internes `403`.
-- **403 plutôt que 404.** Faut-il cacher les dossiers internes derrière une 404, pour ne pas confirmer qu'ils existent ? Non : le gain serait de l'obscurité, pas de la protection. Et côté blue team, une 403 sur un dossier interne, dans les journaux, est un signal clair de reconnaissance, qui se noierait parmi les liens cassés.
+Un serveur en dit souvent plus qu'il ne faut, et protège moins qu'on ne croit.
 
-- **Le dossier des images ne sert que des images** (PR #82). Le serveur refuse, sans l'exécuter, tout fichier de ce dossier qui n'est pas une image au nom attendu. C'est une seconde barrière derrière le contrôle du workflow : un script glissé un jour dans une pull request ne tournerait pas.
-- **Une faille critique annoncée avant son correctif** (PR #83 et #84). Le 20 octobre, deux failles critiques du cœur de PHP, qui permettent d'exécuter du code à distance, ont été rendues publiques avant leur correctif. Des attaques de masse étaient attendues dès sa publication. Je me suis posé trois questions : qui corrige, le correctif existe-t-il, faut-il couper le site ? Sur un hébergement mutualisé, c'est l'hébergeur qui installe PHP ; moi, je choisis la version, et je vérifie qu'elle est encore maintenue. Plutôt que de couper le site, Claude a proposé de ne couper que PHP : le site est statique, seuls les deux formulaires l'utilisent. Une règle temporaire du serveur a refusé toute adresse PHP, sous toutes ses formes, avant qu'elle n'atteigne l'interpréteur ; les formulaires affichaient un message de pause, le reste du site ne changeait pas. Elle a été testée sur un Apache local avec une page témoin qui aurait laissé une trace si PHP avait tourné : elle n'a jamais tourné. J'ai validé et fusionné le jour même. Le lendemain, le numéro de version affiché par l'hébergeur n'avait pas changé : le correctif avait été reporté dans la version en place, sans changer son numéro. Ce numéro ne prouvait donc rien ; j'ai demandé une confirmation écrite à l'hébergeur avant de retirer la règle par une nouvelle PR, et les formulaires sont revenus.
+- **Moins de surface** (PR #8 et #9). Page par défaut supprimée, fichiers internes bloqués, liste des dossiers coupée. Ce qui n'est pas exposé ne s'attaque pas.
+- **Des en-têtes qui protègent** (PR #39). Le navigateur ne charge que ce qui vient du site : un script injecté serait bloqué. Caméra, micro et position sont refusés. La version de PHP n'est plus annoncée.
+
+    *En-têtes HTTP : des consignes invisibles que le serveur envoie avec chaque page. La CSP en est une : la liste des sources autorisées.*
+
+- **HTTPS obligatoire, par paliers** (PR #40 et #54). L'en-tête HSTS oblige le navigateur à rester en HTTPS. Mal réglé, il rend un site injoignable pendant des mois. Alors : 60 secondes, puis une semaine, puis plus. J'ai trouvé la ligne moi-même, en exercice.
+- **Google affichait encore l'ancien site** (PR #54). Le site répondait sous deux adresses, avec et sans `www`, et Google gardait une vieille copie de la première. Une balise peut lui suggérer la bonne adresse ; une redirection `301` la lui impose. J'ai choisi la redirection.
+
+    *Redirection 301 : le serveur répond « cette page a déménagé pour de bon, voici sa nouvelle adresse ».*
+
+- **Si une protection tombe, le site se ferme au lieu de s'ouvrir** (PR #56). Les règles du serveur étaient écrites sous condition : « si tel module est présent, applique ceci ». Module absent : règles ignorées, sans le moindre message. Testé sur un serveur local : des fichiers internes devenaient lisibles par tous. Désormais, un module manquant provoque une erreur visible, et rien ne fuit.
+
+    *En sécurité, on parle de « défaillance sûre » : en cas de panne, on ferme plutôt qu'on n'ouvre.*
+
+- **« Interdit » plutôt que « introuvable ».** Faire croire que les dossiers internes n'existent pas ? Non : ce serait de l'obscurité, pas de la protection. Et dans les journaux du serveur, un « accès interdit » sur un dossier interne signale clairement quelqu'un qui fouille.
+- **Le dossier des images ne sert que des images** (PR #82). Tout autre fichier y est refusé, sans être exécuté. Un script glissé un jour par erreur ne tournerait pas.
+- **Une faille critique, publiée avant son correctif** (PR #83 et #84). Le 20 octobre, deux failles de PHP permettant de prendre la main sur un serveur à distance ont été rendues publiques. Des attaques en masse étaient attendues. Je n'ai pas coupé le site : seulement PHP, dont seuls les deux formulaires dépendent. Le reste du site n'a pas bougé. Le lendemain, la version affichée par l'hébergeur n'avait pas changé. Elle ne prouvait rien : j'ai exigé une confirmation écrite avant de rouvrir.
+
+    *PHP : le langage qui fait tourner les formulaires côté serveur.*
 
 ![Une adresse, une page : redirection www et page 404](images/www-et-404.jpg)
 
@@ -105,102 +152,67 @@ Le site est déployé à chaque fusion sur la branche principale. Tout ce qui y 
 
 ### 3. Ne rien dire de trop
 
-Une reconnaissance commence par ce que le site dit de lui-même. Tout ce qui est public, un attaquant le lit aussi.
+Une attaque commence par lire. Tout ce qui est public, un attaquant le lit aussi.
 
-- **Fichiers publics nettoyés** (PR #52 et #53). `robots.txt` est souvent le premier fichier qu'on ouvre pour reconnaître un site (OWASP WSTG-INFO-03). Son commentaire citait les dossiers internes (erreur de Claude, dans la PR #50). Les commentaires du HTML et du CSS nommaient le fichier de règles du projet, le workflow et la protection du formulaire. Ce n'étaient pas des failles, puisque ces dossiers répondent `403`, mais des informations gratuites. Tout est retiré, et une règle du projet l'interdit désormais.
-- **Une page « Sous le capot »** (PR #69, #70 et #75). Elle explique aux visiteurs comment le site les protège : ce que reçoit leur navigateur, le formulaire, leur vie privée, la façon dont le site est construit. Elle s'en tient aux principes : aucun seuil, aucune durée, aucun nom de fichier interne ni d'outil. Elle est passée du menu au pied de page le 12 octobre ; pour qu'un recruteur la trouve quand même, le mot « sécurise » de ma bio est devenu un lien vers elle. Elle renvoie vers ce document par un simple lien : rien n'est chargé chez GitHub avant le clic.
-- **Un fichier de travail publié** (quatrième revue de code, 14 octobre). Une liste de branches à supprimer, préparée pour le ménage du dépôt, avait été déposée à sa racine : le site la servait à tout le monde. Rien de secret, mais une information gratuite sur l'organisation du dépôt. Je l'ai retirée.
-- **Dire où signaler une faille.** Un fichier `security.txt` (norme RFC 9116) et une section de « Sous le capot » l'indiquent aux chercheurs en sécurité.
-- **Ce document suit la même règle.** Il décrit des principes, jamais des réglages, et ne cite que des points corrigés : on ne publie pas une faiblesse encore ouverte.
+- **Des fichiers publics trop bavards** (PR #52 et #53). `robots.txt`, souvent le premier fichier qu'on ouvre pour reconnaître un site, citait des dossiers internes (erreur de Claude). Des commentaires du code nommaient des protections. Pas des failles : des indices gratuits. Tout est retiré, et une règle du projet l'interdit désormais.
+
+    *`robots.txt` : un fichier public qui dit aux moteurs de recherche où aller et où ne pas aller.*
+
+- **Un fichier de travail oublié en ligne** (14 octobre). Une liste de branches à supprimer, déposée à la racine du site. Rien de secret, mais une information gratuite. Repéré à la quatrième revue de code, retiré.
+- **« Sous le capot » : expliquer sans dévoiler** (PR #69, #70 et #75). Une page qui dit aux visiteurs comment le site les protège, en principes seulement : aucun seuil, aucun nom de fichier. Le mot « sécurise » de ma bio y mène, pour qu'un recruteur la trouve.
+- **Dire où signaler une faille.** Un fichier `security.txt`, au format standard, l'indique aux chercheurs en sécurité.
+- **Ce document suit la même règle.** Des principes, jamais de réglages. On ne publie pas une faiblesse encore ouverte.
 
 *Réflexes : limiter les fuites d'information, divulgation coordonnée.*
 
 ### 4. Les données des visiteurs
 
-Le site reçoit des données de visiteurs inconnus : leur adresse IP à chaque visite, et ce qu'ils écrivent dans les deux formulaires, le contact et le livre d'or.
+Chaque visite laisse une adresse IP. Chaque formulaire, ce que la personne écrit.
 
-**Rien chez un tiers** (PR #37). Les polices venaient de Google Fonts : chaque visite envoyait l'adresse IP du visiteur à Google, sans son accord. Elles sont maintenant servies par le site, et plus rien n'est chargé ailleurs.
+- **Rien chez un tiers** (PR #37). Les polices venaient de Google : chaque visite lui envoyait l'adresse du visiteur, sans son accord. Elles sont maintenant servies par le site.
+- **Mesurer avant de corriger** (PR #64). La revue de code soupçonnait le formulaire de compter la mauvaise adresse. Claude m'a donné un indice, pas la réponse. J'ai mesuré, depuis le PC puis en 4G : fausse alerte. Mais la mesure a révélé un autre point, corrigé dans la même PR.
+- **Pseudonymiser pour de vrai** (PR #64). Les adresses étaient gardées sous forme d'empreinte, sans clé. Or il n'existe que 4,3 milliards d'adresses IPv4 : on les essaie toutes en quelques minutes, et l'adresse d'origine réapparaît. J'ai tenté la correction trois fois, puis Claude l'a écrite et je l'ai relue. Désormais : empreinte à clé secrète, effacée quand elle ne sert plus, envois venus d'un autre site refusés, et un formulaire qui s'arrête plutôt que de tourner sans protection.
 
-**Mesurer avant de corriger** (PR #64). La revue de code soupçonnait la limite d'envois de compter la mauvaise adresse, à cause du CDN de l'hébergeur. Claude m'a donné un indice plutôt que la réponse, et j'ai mesuré : une ligne de journal temporaire, un envoi depuis le PC puis depuis le téléphone en 4G, et une comparaison avec `ifconfig.me`. Verdict : l'hypothèse était fausse. Mais la mesure a révélé un autre point, corrigé dans la même PR.
+    *Empreinte : une suite de caractères calculée à partir d'une donnée. Impossible à « décalculer », mais on peut la retrouver en essayant toutes les valeurs possibles. Avec une clé secrète (HMAC), c'est impossible sans la clé.*
 
-**Pseudonymiser** (PR #64). Une empreinte sans clé n'est pas anonyme : avec 4,3 milliards d'adresses IPv4 possibles, on retrouve l'adresse d'origine en quelques minutes. C'est une pseudonymisation, pas une anonymisation. J'ai essayé de corriger moi-même. Mon premier essai ajoutait un sel aléatoire à chaque envoi, ce qui empêchait de reconnaître deux envois du même visiteur : un sel protège des mots de passe, ici il fallait une clé fixe et secrète (HMAC). Après deux autres essais, j'ai demandé à Claude d'écrire la correction, que j'ai relue. Le formulaire garde désormais des empreintes à clé secrète, générée sur mon poste sans jamais s'afficher à l'écran, et les efface quand elles ne servent plus. Il refuse les envois venus d'un autre site, et s'arrête proprement si sa configuration est incomplète, au lieu de fonctionner sans protection.
+- **Un livre d'or sans risque** (PR #72). Codé par Claude, faute de temps, en m'expliquant chaque étape. Rien n'est publié automatiquement ni stocké sur le serveur : je reçois chaque message par e-mail et je publie ceux que j'accepte. Un message s'affiche comme du texte, jamais comme du code : un script collé dedans ne s'exécute pas. Le serveur revérifie tout et limite les envois.
 
-Après la fusion, j'ai vérifié en ligne qu'un envoi venu d'un autre domaine était refusé et qu'un vrai message passait. J'ai aussi vidé le journal PHP des lignes qui contenaient mes adresses IP en clair : le test avait laissé des données personnelles derrière lui.
+    *XSS : une attaque qui glisse un script dans une page pour qu'il s'exécute chez les visiteurs suivants.*
 
-**Le livre d'or, finalement codé par Claude** (PR #72). J'avais prévu de l'écrire moi-même. Faute de temps, Claude l'a codé en m'expliquant chaque étape, et j'ai relu ; je le dis plutôt que de laisser croire le contraire. Trois principes :
-
-- **Rien n'est publié automatiquement, rien n'est stocké sur le serveur.** Un message validé m'arrive par e-mail ; je le publie par une pull request, les autres sont supprimés. Cette modération a priori m'évite une page d'administration à protéger et des données à garder.
-- **Un message est du texte, jamais du code.** La page n'écrit jamais un message comme du HTML : un script collé dans le livre d'or s'affiche sans s'exécuter (faille de type XSS stockée, testé dans un navigateur).
-- **Le serveur ne fait pas confiance au navigateur.** Il vérifie lui-même les longueurs, refuse les caractères invisibles ou qui inversent le sens de lecture, les liens et les adresses e-mail, et limite les envois, par visiteur et pour tout le site (sans cette seconde limite, mille adresses différentes noieraient ma boîte de réception).
-
-Le code commun aux deux formulaires est regroupé dans un seul fichier, pour qu'un correctif vaille pour les deux. Avant la fusion, Claude a joué une trentaine de cas d'abus (messages trop longs, données du mauvais type, caractères piégés, envois en rafale). Ces tests ont trouvé **un vrai défaut de l'ancien formulaire de contact** : un champ envoyé sous forme de liste provoquait une erreur fatale côté serveur. Il répond maintenant comme à un champ vide.
-
-
-**Une seconde limite pour le contact** (PR #80). Comme le livre d'or, le formulaire de contact a maintenant une limite pour tout le site, en plus de la limite par visiteur : une seule personne disposant de nombreuses adresses pouvait sinon noyer ma boîte de réception et faire bloquer mon compte de messagerie. La même PR aligne le comptage des caractères du livre d'or : le navigateur comptait un emoji double, le serveur une seule fois, et un message valide pouvait être écarté à l'affichage.
-
-**Les mentions légales, relues face au code** (PR #75 et #79). Je ne vends rien et je publie sous un pseudonyme : la loi autorise alors un éditeur non professionnel à rester anonyme, à condition que son hébergeur connaisse son identité et que la page nomme l'hébergeur et donne ses coordonnées. Le 13 octobre, Claude a relu la page en la comparant au code des deux formulaires :
-
-- pour chaque donnée, la page dit maintenant pourquoi elle est traitée et sur quel fondement, qui la reçoit (l'hébergeur, comme sous-traitant), combien de temps elle est gardée, et quels droits on peut exercer ; elle prévient qu'un message du livre d'or est public et peut être indexé ;
-- une promesse était plus ferme que le code, sur l'effacement des empreintes d'adresses. Je n'ai pas changé le code : j'ai corrigé les textes pour qu'ils disent ce que le code fait ;
-- l'hébergeur ne publie pas de téléphone pour l'entité qui héberge mon site. Je n'ai pas inventé de numéro : la page affiche le numéro officiel que le groupe publie, et dit d'où il vient.
+- **Des tests d'abus qui trouvent un vrai bug.** Une trentaine de cas joués avant la fusion : l'ancien formulaire de contact plantait sur un champ envoyé sous forme de liste. Corrigé.
+- **Une limite pour tout le site** (PR #80). Une seule personne disposant de nombreuses adresses pouvait noyer ma boîte mail. Le contact a maintenant, comme le livre d'or, une limite globale en plus de celle par visiteur.
+- **Des mentions légales qui disent ce que fait le code** (PR #75 et #79). Je ne vends rien : la loi me permet de rester sous pseudonyme, si l'hébergeur connaît mon identité. Chaque donnée a son but, sa durée et ses droits. Une promesse d'effacement était plus ferme que le code : j'ai corrigé le texte, pas le code.
 
 *Réflexes : minimisation des données, pseudonymisation, mesurer avant de conclure, sortie sûre, obligations légales et vie privée, dire ce que fait le code.*
 
-### 5. Le site lui-même
-
-**L'en-tête** (PR #19). « Artiste peintre » est un intitulé de métier, et la peinture n'est pas le métier que je vise. « Street art & technoculture » décrit le travail : le mot parle à la fois des machines peintes et de la carrière tech. Il s'écrit en un seul mot et en minuscule : avec un espace, on lirait « culture techno », la musique.
-
-![En-tête avant et après](images/entete-avant-apres.jpg)
-
-**L'accueil** (PR #24 à #27). D'une bannière fixe à une page qui raconte : l'accroche « Chaque toile a son code. », un mur de toiles qui défilent, les cartes des séries, un zoom sur une toile, la bio, le contact. Aucun nombre de toiles n'est affiché : il deviendrait faux à chaque ajout.
-
-![Structure de l'accueil : un écran avant, six blocs après](images/accueil-structure.jpg)
-
-**Six séries** (PR #22 et #23). Chacune a son filtre et sa propre adresse (`portfolio.html#mondes`). La liste des séries n'existe qu'à un seul endroit, que le workflow relit : une série s'ajoute sans toucher au code. Je l'ai vérifié en créant seul la série Persos.
-
-![Le portfolio avant et après](images/portfolio-avant-apres.jpg)
-
-**Les textes** (PR #36, #55 et #67). Tous réécrits dans un document partagé, corrigés et validés : un `h1` par page, une phrase par série, une description pour Google par page, qui commence par « street art », les mots qu'on cherche vraiment. Chaque toile a une description de ce qu'on voit, distincte de son titre ; avant, un lecteur d'écran lisait parfois « fresque-1 ».
-
-**Accessibilité** (PR #38). L'outil axe et des tests au clavier ont révélé trois problèmes : la touche Tab sautait toutes les toiles, la visionneuse n'avait pas de bouton de fermeture, et les champs du formulaire n'avaient pas d'étiquette. Chaque toile est maintenant un bouton, et la visionneuse une vraie fenêtre de dialogue : le focus va sur « Fermer », reste dans la fenêtre, puis revient sur la toile.
-
-![Visionneuse ouverte au clavier, focus sur le bouton Fermer](images/lightbox-clavier.jpg)
-
-**Le poids des pages** (PR #7 et #29 à #31). Images de départ allégées de 18,9 à 4,4 Mo sans différence visible, puis des miniatures de 640 px avec `srcset` : le navigateur prend la plus petite image qui suffit.
-
-**Le partage** (PR #50 et #51). Un lien du site collé dans WhatsApp, LinkedIn ou Discord affiche un aperçu : titre, description et image (balises Open Graph). WhatsApp ne montre parfois qu'un carré découpé au centre de l'image : la composition est symétrique, et j'ai choisi cette version parmi plusieurs variantes.
-
-![Image d'aperçu affichée au partage d'un lien du site](images/apercu-partage.jpg)
-
 ## Incidents et leçons
 
-Les erreurs de Claude sont regroupées par leçon ; chaque erreur reste comptée.
-
-| Incident | Cause | Ce que j'en retiens |
-|---|---|---|
-| Une image remplacée revient dans son ancienne version (28 septembre, puis 5 octobre) | Même nom de fichier ; le cache de l'hébergeur garde l'image une semaine | La leçon du premier jour avait été oubliée. Le workflow l'applique maintenant (PR #48) |
-| Quatre corrections faites directement sur la branche principale : doublons et image cassée dans la galerie, carte de l'accueil cassée, formulaire modifié, fichier de travail retiré (14 octobre) | J'ai réparé à la main, hors pull request, la première fois au lieu de prendre la correction prête (PR #18) | La règle vaut aussi pour moi. La protection de branche n'existe pas pour un dépôt privé en offre gratuite : la discipline doit la remplacer |
-| Des prénoms publiés, et deux PR fusionnées trop vite (#31 avant le test sur téléphone, #33 avant la relecture des titres) | PR fusionnées sans relecture ni test | Prénoms retirés six minutes plus tard, mais une publication ne s'efface jamais complètement. Une PR ouverte ne coûte rien, une erreur en ligne si |
-| Deux toiles représentant des personnes réelles, titrées par leur prénom ou surnom | Publiées avant d'avoir l'accord des personnes | L'une retirée, l'autre renommée. Utiliser le portrait de quelqu'un demande son accord ; publier est irréversible |
-| Conflits de fusion en série | Mon éditeur reformatait tout le fichier à chaque sauvegarde | Formater quand on le décide ; récupérer la dernière version avant de modifier |
-| Dix affirmations fausses (erreur de Claude) : une PR décrivant un comportement faux, trois constats faux dans la revue de code, une faille classée « élevée » sans mesure, deux hypothèses fausses le 8 octobre, un menu à cinq liens annoncé, deux erreurs le 15 octobre (un commentaire de code sur la recherche d'un nom de fichier, l'effet d'un essai à blanc de Git) | Des constats tirés d'une sortie tronquée, d'octets comptés comme des caractères ou d'un schéma de l'architecture, sans vérification ni relecture des règles du projet | Vérifier un constat avant de le présenter. Ma mesure a infirmé la faille supposée, et révélé un autre point, corrigé (PR #64) |
-| Une promesse de vie privée plus ferme que le code (erreur de Claude) | Un texte écrit sans être relu face au code | Une page de vie privée est une promesse : chaque phrase se vérifie dans le code (PR #79) |
-| Une règle d'urgence trop large au premier jet (erreur de Claude), le 21 octobre | Le message d'erreur des formulaires était posé pour tout le site, et ses accents seraient arrivés cassés | Même dans l'urgence, tester aussi les cas qu'on ne vise pas : le test local l'a montré avant la PR (#83) |
-| Deux correctifs sur téléphone sans effet (erreur de Claude) | Corrections sur hypothèse, sans mesure sur l'appareil | Problème encore ouvert : mesurer avant de corriger |
-| Un commentaire de `robots.txt` citait les dossiers internes (erreur de Claude) | Un commentaire écrit pour expliquer, dans un fichier public | Un fichier public ne décrit jamais l'intérieur du site (PR #52) |
-| Six erreurs d'organisation (erreur de Claude) : maquettes perdues dans l'éditeur, PR d'ajout en double, résumé de l'état du site en retard, deux PR fusionnées dans une branche intermédiaire, mise à jour de ce document écrite hors de sa source, une branche envoyée sans deux de ses fichiers (rattrapé avant la PR #82) | Travail découpé ou repris sans vérifier l'état réel : outil, workflow en cours, cible des PR, contrôles du document | Toujours une version image d'une maquette ; vérifier la cible d'une PR avant de la fusionner ; noter chaque action au fil de la tâche ; un contrôle ne vaut que si on passe par lui. Ces règles sont écrites dans `CLAUDE.md` (PR #71, #77 et #78) |
+| Ce qui s'est passé | Ce que j'en retiens |
+|---|---|
+| Une image remplacée revient dans son ancienne version, deux fois | Une image qui change, change de nom. Le robot l'applique désormais (PR #48) |
+| Quatre corrections faites en direct sur la branche principale, par moi | La règle vaut pour moi aussi. Sans protection de branche (offre gratuite), seule la discipline protège |
+| Des prénoms publiés, deux PR fusionnées trop vite | Une PR ouverte ne coûte rien. Une erreur en ligne ne s'efface jamais complètement |
+| Deux toiles de personnes réelles, titrées par leur prénom | Pas de portrait sans accord : publier est irréversible |
+| Des conflits de fusion en série | Mon éditeur reformatait tout à chaque sauvegarde. Je formate quand je le décide |
+| Dix affirmations fausses (erreur de Claude) | Un constat se vérifie avant d'être présenté. Ma mesure a démenti une faille classée « élevée » (PR #64) |
+| Une promesse de vie privée plus ferme que le code (erreur de Claude) | Chaque phrase d'une page de vie privée se vérifie dans le code (PR #79) |
+| Une règle d'urgence trop large au premier jet (erreur de Claude) | Même pressé, on teste aussi ce qu'on ne vise pas. Le test local l'a attrapée avant la PR (#83) |
+| Deux correctifs sur téléphone sans effet (erreur de Claude) | Mesurer sur l'appareil avant de corriger |
+| Un fichier public citait des dossiers internes (erreur de Claude) | Un fichier public ne décrit jamais l'intérieur du site (PR #52) |
+| Six erreurs d'organisation (erreur de Claude) | Vérifier l'état réel avant d'agir. Ces règles sont écrites dans `CLAUDE.md` (PR #71, #77 et #78) |
 
 ## La suite
 
-- **Toiles noires sur Android** jusqu'au premier défilement : mesurer sur l'appareil (débogage USB, onglet Réseau) avant tout nouveau correctif.
-- **Poids des pages** : sur un écran haute définition, la miniature de 640 px est trop petite et la galerie charge les images complètes. Il faut une taille intermédiaire, et limiter le nombre de miniatures du mur de l'accueil.
-- **Tenir la durée de conservation annoncée** : trier régulièrement ma messagerie.
-- **Authentification des mails** : publier SPF, DKIM et DMARC, pour que personne ne puisse envoyer de faux mails au nom du domaine.
-- **HSTS** : un mois, puis un an, avec une vérification à chaque palier.
-- **Des vérifications automatiques dans les pull requests** : une toile sans vraie description, un fichier de messages du livre d'or mal formé.
+L'essentiel est fait, mais ce n'est pas fini. La suite, je compte en faire davantage « seul », guidé par l'IA.
+
+- **Retirer une toile par un workflow.** J'écris moi-même le workflow, en exercice guidé ; Claude écrit le script, que je relis et teste. Le script et la première étape sont faits.
+- **Changer la toile mise en avant sur l'accueil**, sur le même modèle.
 - **Attaquer moi-même le livre d'or**, en exercice : injection de script, envois en masse, champs trop longs.
-- **Retirer une toile par un workflow**, sur les règles du workflow d'ajout : validation en tout ou rien, pull request, jeton d'écriture réservé à la dernière étape. Le partage a changé : j'écris moi-même le fichier du workflow, en exercice guidé ; Claude écrit le script Python, que je relis et teste. Le script et la première étape sont faits.
-- **Un workflow pour changer la toile mise en avant sur l'accueil**, à étudier ensuite, sur le même modèle.
+- **Des contrôles automatiques dans les pull requests** : une toile sans vraie description, un message du livre d'or mal formé.
+- **HSTS** : un mois, puis un an, avec une vérification à chaque palier.
+- **Des mails authentifiés** (SPF, DKIM, DMARC), pour que personne ne puisse écrire au nom du domaine.
+- **Tenir la durée de conservation annoncée** : trier régulièrement ma messagerie.
+- **Des images plus justes** : toiles noires sur Android jusqu'au premier défilement, miniatures trop petites sur écran haute définition. Mesurer d'abord, corriger ensuite.
 
 Me contacter : par le [formulaire du site](https://djos-galley.online/about.html).
 

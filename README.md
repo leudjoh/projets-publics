@@ -10,7 +10,7 @@ Ce dépôt regroupe tout ce que j'ai appris en codant — pas seulement de la cy
 
 | Dossier | Projet | Domaine |
 |---|---|---|
-| [`Rust/brutect`](Rust/brutect/README.md) | Détecteur de force brute SSH dans un `auth.log` | Blue team / forensique |
+| [`Rust/brutect`](Rust/brutect/README.md) | Détecteur de force brute SSH dans un `auth.log`, et son [retour d'expérience](Rust/brutect/RETEX.md) | Blue team / forensique |
 | [`djodjos-gallery-retex`](djodjos-gallery-retex/README.md) | Retour d'expérience : refondre et sécuriser un site vitrine, avec une IA | Sécurité web, DevSecOps |
 | [`Python`](Python) | Outils réseau écrits ou réécrits pour apprendre | Réseau / offensif (apprentissage) |
 | [`PowerShell`](PowerShell) | Scripts d'administration Windows et Active Directory | Admin système / AD |
@@ -19,6 +19,8 @@ Ce dépôt regroupe tout ce que j'ai appris en codant — pas seulement de la cy
 ### `Rust/brutect` — détecter la force brute SSH
 
 Un outil en ligne de commande qui lit un journal d'authentification Linux (`auth.log`) et répond à trois questions : quelles IP ont tenté de deviner un mot de passe SSH, quels comptes elles ont visés, et si l'une a fini par se connecter (compromission probable). Analyse a posteriori, utile pour un exercice de forensique, un CTF ou le contrôle de son propre serveur. Binaire Linux x86_64 fourni avec son empreinte `sha256`. **Détails et mode d'emploi : [`Rust/brutect/README.md`](Rust/brutect/README.md).** Sous licence [MIT](Rust/brutect/LICENSE).
+
+Je ne connaissais pas Rust : l'outil a été écrit par une IA, avec moi en Product Owner, grâce à la méthode de travail avec l'IA partagée par SFEIR. Le récit, avec les relectures, les incidents et la suite (ce n'est pas fini) : **[`Rust/brutect/RETEX.md`](Rust/brutect/RETEX.md)** (version [PDF](Rust/brutect/brutect-retour-experience.pdf) également).
 
 ### `djodjos-gallery-retex` — retour d'expérience sécurité web
 

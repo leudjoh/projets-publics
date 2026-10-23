@@ -1,8 +1,8 @@
 # projets-publics
 
-**Projets publics d'apprentissage en cybersécurité.**
+**Mes projets d'apprentissage du code, depuis ma réorientation vers l'informatique.**
 
-Objectif : la cybersécurité, d'abord en **blue team** (défense, détection, durcissement), puis le **pentest**.
+Ce dépôt regroupe tout ce que j'ai appris en codant — pas seulement de la cybersécurité, même si c'est là que je vais : mon objectif est la cybersécurité, en **blue team** et en **pentest**.
 
 > C'est un dépôt vivant. Il va **évoluer** : des projets s'ajouteront, d'autres seront repris ou corrigés. Ce que vous voyez est un instantané, pas un état final.
 

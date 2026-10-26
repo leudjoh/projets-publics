@@ -2,7 +2,7 @@
 
 **Livrer un outil de cybersécurité en Rust sans connaître Rust, avec une IA et une méthode**
 
-Geoffroy, alias Djodjo · en reconversion vers la cybersécurité (blue team) · octobre 2026
+octobre 2026
 
 Outil : [brutect](README.md) · Version PDF : [brutect-retour-experience.pdf](brutect-retour-experience.pdf) · Retex précédent : [Djodjo's Gallery](../../djodjos-gallery-retex/README.md)
 

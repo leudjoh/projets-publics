@@ -53,7 +53,7 @@ Ce résultat, je le dois à **la méthode de travail avec l'IA partagée par [SF
 
 ## Qui a fait quoi
 
-| Moi (Geoffroy) | Claude (IA) |
+| Moi | Claude (IA) |
 |---|---|
 | Le choix de l'outil parmi trois idées, et son public : quelqu'un qui apprend la cybersécurité ou résout un CTF | Les questions de cadrage, la spec et les 30 scénarios |
 | Les arbitrages : ce qui compte comme ligne ignorée, ce qui part en V2 | Tout le code Rust et tous les tests |

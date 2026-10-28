@@ -25,7 +25,15 @@ sudo mv brutect /usr/local/bin/  # facultatif, pour le lancer de n'importe où
 ## Utilisation
 
 ```
-brutect [--seuil N] [--fenetre SECONDES] [--json] <FICHIER | ->
+brutect [--seuil N] [--fenetre SECONDES] [--json] <FICHIER>...
+```
+
+Exemples, selon la distribution :
+
+```bash
+sudo brutect /var/log/auth.log*                         # Debian, Ubuntu
+sudo brutect /var/log/secure*                           # Red Hat, Rocky, AlmaLinux
+sudo journalctl -u sshd -o short-iso | brutect -        # Fedora, Arch (journald)
 ```
 
 | Option | Rôle | Par défaut |
@@ -33,11 +41,11 @@ brutect [--seuil N] [--fenetre SECONDES] [--json] <FICHIER | ->
 | `--seuil N` | Nombre d'échecs à partir duquel une IP est signalée | 5 |
 | `--fenetre SECONDES` | Durée maximale entre le premier et le dernier de ces échecs | 60 |
 | `--json` | Rapport en JSON au lieu du texte | |
-| `-` | Lit l'entrée standard au lieu d'un fichier | |
+| `-` | Lit l'entrée standard (une seule fois parmi les fichiers) | |
 
-Le fichier peut être en texte ou compressé en gzip (`.gz`) : `brutect` le reconnaît tout seul.
+Chaque fichier, comme l'entrée standard, peut être en texte ou compressé en gzip (`.gz`) : `brutect` le reconnaît tout seul.
 
-Code de sortie : `0` si l'analyse aboutit, avec ou sans détection ; `1` en cas d'erreur (fichier absent, gzip corrompu, option invalide).
+Code de sortie : `0` si l'analyse aboutit, avec ou sans détection ; `1` en cas d'erreur (fichier absent, gzip corrompu, option invalide). Avec plusieurs fichiers, la moindre erreur arrête tout : aucun rapport partiel, et le message nomme le fichier en cause.
 
 ## Exemple
 
@@ -64,22 +72,25 @@ Lignes ignorées : 1
 
 ## Analyser plusieurs fichiers
 
-Sur Ubuntu et Debian, le journal est découpé chaque semaine : `auth.log` (en cours), `auth.log.1` (semaine précédente), `auth.log.2.gz`, etc. Une attaque peut être coupée en deux par ce découpage. Pour tout analyser d'un coup, du plus ancien au plus récent :
+Sur Ubuntu et Debian, le journal est découpé chaque semaine : `auth.log` (en cours), `auth.log.1` (semaine précédente), `auth.log.2.gz`, etc. Une attaque peut être coupée en deux par ce découpage. `brutect` accepte tous ces fichiers d'un coup, texte et gzip mélangés, dans n'importe quel ordre, et produit **un seul rapport** :
 
 ```bash
-zcat -f /var/log/auth.log.2.gz /var/log/auth.log.1 /var/log/auth.log | brutect -
+sudo brutect /var/log/auth.log*
 ```
 
 Lire `/var/log/auth.log` demande d'être dans le groupe `adm` ou d'utiliser `sudo`.
 
+Évitez `cat /var/log/auth.log* | brutect -` : le texte et le gzip arrivent mélangés dans un seul flux. `brutect` le détecte et s'arrête avec une erreur qui donne la bonne commande, plutôt que de rendre un rapport vide trompeur.
+
 ## Ce que l'outil reconnaît
 
 - Les lignes `sshd` : `Failed password`, `Invalid user` et `Accepted` (mot de passe, clé publique…).
-- Les dates au format syslog classique (`Oct 23 09:15:03`) ou ISO 8601 avec fuseau (`2026-10-23T09:15:03+02:00`).
+- Les lignes `message repeated N times: [ … ]`, que `rsyslog` écrit à la place de messages identiques répétés : chacune compte pour N échecs.
+- Les dates au format syslog classique (`Oct 23 09:15:03`) ou ISO 8601 avec fuseau (`2026-10-23T09:15:03+02:00`). Le format syslog n'a pas d'année : `brutect` la déduit de la date de modification du fichier, pour qu'une attaque fin décembre suivie d'une connexion début janvier reste dans le bon ordre.
 - Les adresses IPv4 et IPv6.
 - Les fichiers non triés et les octets invalides, sans planter.
 
-Le rapport texte neutralise les caractères de contrôle venus du log : un nom d'utilisateur piégé ne peut pas injecter de séquence dans votre terminal.
+Le rapport neutralise ce qui vient du log ou des noms de fichiers : un nom d'utilisateur piégé ne peut pas injecter de séquence dans votre terminal, et un caractère invisible est affiché sous forme de code. Par exemple, `root` avec un espace invisible au milieu s'affiche `ro\u{200b}ot`, et ne passe donc plus pour le vrai `root`.
 
 ## Comment il a été fait
 

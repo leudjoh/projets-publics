@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Bloque le commit si gitleaks détecte un secret dans l'index (staged)
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "gitleaks introuvable : commit bloqué." >&2
+  exit 1
+fi
+if ! gitleaks git --staged --redact --no-banner --verbose; then
+  echo "Secret potentiel détecté : commit bloqué. Retire-le puis recommite." >&2
+  exit 1
+fi
